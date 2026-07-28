@@ -20,7 +20,7 @@ export function formatTZS(value: number | string | null | undefined) {
 export async function resolveMediaUrls(paths: string[]): Promise<string[]> {
   if (!paths.length) return [];
   const { data } = await supabase.storage.from("listings").createSignedUrls(paths, 3600);
-  return (data ?? []).map((d) => d.signedUrl).filter(Boolean);
+  return (data ?? []).map((d) => d.signedUrl).filter((u): u is string => Boolean(u));
 }
 
 export function isVideoPath(path: string) {

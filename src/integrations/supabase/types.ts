@@ -14,16 +14,247 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      locations: {
+        Row: {
+          city: string | null
+          created_at: string
+          id: string
+          region: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          id?: string
+          region: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          id?: string
+          region?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          delivery_city: string | null
+          delivery_region: string | null
+          id: string
+          notes: string | null
+          product_id: string
+          quantity: number
+          seller_id: string
+          status: Database["public"]["Enums"]["order_status"]
+          total_tzs: number
+          transport_cost_tzs: number
+          unit_price_tzs: number
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          delivery_city?: string | null
+          delivery_region?: string | null
+          id?: string
+          notes?: string | null
+          product_id: string
+          quantity?: number
+          seller_id: string
+          status?: Database["public"]["Enums"]["order_status"]
+          total_tzs?: number
+          transport_cost_tzs?: number
+          unit_price_tzs?: number
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          delivery_city?: string | null
+          delivery_region?: string | null
+          id?: string
+          notes?: string | null
+          product_id?: string
+          quantity?: number
+          seller_id?: string
+          status?: Database["public"]["Enums"]["order_status"]
+          total_tzs?: number
+          transport_cost_tzs?: number
+          unit_price_tzs?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          breed: string | null
+          category_slug: string
+          city: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          id: string
+          media_urls: string[]
+          price_tzs: number
+          quantity: number
+          region: string | null
+          seller_id: string
+          status: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          breed?: string | null
+          category_slug: string
+          city?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          media_urls?: string[]
+          price_tzs?: number
+          quantity?: number
+          region?: string | null
+          seller_id: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          breed?: string | null
+          category_slug?: string
+          city?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          media_urls?: string[]
+          price_tzs?: number
+          quantity?: number
+          region?: string | null
+          seller_id?: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          title?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          approved: boolean
+          city: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          region: string | null
+          role: Database["public"]["Enums"]["user_kind"]
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          approved?: boolean
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          region?: string | null
+          role?: Database["public"]["Enums"]["user_kind"]
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          approved?: boolean
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          region?: string | null
+          role?: Database["public"]["Enums"]["user_kind"]
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      listing_status: "pending" | "approved" | "rejected"
+      order_status:
+        | "requested"
+        | "accepted"
+        | "in_transit"
+        | "completed"
+        | "cancelled"
+      user_kind: "buyer" | "seller"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +381,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      listing_status: ["pending", "approved", "rejected"],
+      order_status: [
+        "requested",
+        "accepted",
+        "in_transit",
+        "completed",
+        "cancelled",
+      ],
+      user_kind: ["buyer", "seller"],
+    },
   },
 } as const

@@ -1,0 +1,32 @@
+{
+  "name": "Ndauka Rabbit Market",
+  "short_name": "Ndauka Rabbit",
+  "description": "Ndauka Rabbit Market ni jukwaa rasmi la kuuza na kununua sungura wa mbegu, mabanda ya kisasa, na vyakula bora vya mifugo.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "sw",
+  "theme_color": "#008751",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

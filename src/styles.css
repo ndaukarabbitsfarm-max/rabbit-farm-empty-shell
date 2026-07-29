@@ -176,3 +176,15 @@
 @utility safe-top {
   padding-top: env(safe-area-inset-top, 0px);
 }
+
+/* Hide the floating "Edit with Lovable" badge on all pages */
+#lovable-badge,
+a[href*="lovable.dev"][target="_blank"][class*="badge"],
+[id^="lovable-badge"],
+[class*="lovable-badge"],
+lovable-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

@@ -58,7 +58,7 @@ function HomePage() {
     queryFn: async () => {
       let q = supabase
         .from("products")
-        .select("*")
+        .select(PUBLIC_PRODUCT_COLUMNS)
         .eq("status", "approved")
         .order("created_at", { ascending: false });
       if (category !== "all") q = q.eq("category_slug", category);

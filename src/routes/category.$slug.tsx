@@ -35,7 +35,7 @@ function CategoryPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*")
+        .select(PUBLIC_PRODUCT_COLUMNS)
         .eq("status", "approved")
         .eq("category_slug", slug)
         .order("created_at", { ascending: false });

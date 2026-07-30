@@ -21,6 +21,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as ListingIdEditRouteImport } from './routes/listing.$id.edit'
 
@@ -84,6 +85,11 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesIdRoute = MessagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MessagesRoute,
+} as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
   path: '/category/$slug',
@@ -101,13 +107,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
-  '/messages': typeof MessagesRoute
+  '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
   '/listing/$id/edit': typeof ListingIdEditRoute
 }
@@ -117,13 +124,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
-  '/messages': typeof MessagesRoute
+  '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
   '/listing/$id/edit': typeof ListingIdEditRoute
 }
@@ -134,13 +142,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
-  '/messages': typeof MessagesRoute
+  '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
   '/listing/$id/edit': typeof ListingIdEditRoute
 }
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/sitemap.xml'
     | '/category/$slug'
+    | '/messages/$id'
     | '/product/$id'
     | '/listing/$id/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/sitemap.xml'
     | '/category/$slug'
+    | '/messages/$id'
     | '/product/$id'
     | '/listing/$id/edit'
   id:
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/sitemap.xml'
     | '/category/$slug'
+    | '/messages/$id'
     | '/product/$id'
     | '/listing/$id/edit'
   fileRoutesById: FileRoutesById
@@ -201,7 +213,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CategoriesRoute: typeof CategoriesRoute
-  MessagesRoute: typeof MessagesRoute
+  MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
@@ -298,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages/$id': {
+      id: '/messages/$id'
+      path: '/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof MessagesIdRouteImport
+      parentRoute: typeof MessagesRoute
+    }
     '/category/$slug': {
       id: '/category/$slug'
       path: '/category/$slug'
@@ -315,13 +334,25 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface MessagesRouteChildren {
+  MessagesIdRoute: typeof MessagesIdRoute
+}
+
+const MessagesRouteChildren: MessagesRouteChildren = {
+  MessagesIdRoute: MessagesIdRoute,
+}
+
+const MessagesRouteWithChildren = MessagesRoute._addFileChildren(
+  MessagesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CategoriesRoute: CategoriesRoute,
-  MessagesRoute: MessagesRoute,
+  MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,

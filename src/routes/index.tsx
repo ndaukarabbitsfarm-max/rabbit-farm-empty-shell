@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CATEGORIES } from "@/lib/marketplace";
+import { CATEGORIES, PUBLIC_PRODUCT_COLUMNS } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 

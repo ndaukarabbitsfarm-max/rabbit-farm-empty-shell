@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CATEGORIES } from "@/lib/marketplace";
+import { CATEGORIES, PUBLIC_PRODUCT_COLUMNS } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +58,7 @@ function HomePage() {
     queryFn: async () => {
       let q = supabase
         .from("products")
-        .select("*")
+        .select(PUBLIC_PRODUCT_COLUMNS)
         .eq("status", "approved")
         .order("created_at", { ascending: false });
       if (category !== "all") q = q.eq("category_slug", category);

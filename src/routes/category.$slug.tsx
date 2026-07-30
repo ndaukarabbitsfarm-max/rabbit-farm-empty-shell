@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { categoryName } from "@/lib/marketplace";
+import { categoryName, PUBLIC_PRODUCT_COLUMNS } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/category/$slug")({
@@ -35,7 +35,7 @@ function CategoryPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*")
+        .select(PUBLIC_PRODUCT_COLUMNS)
         .eq("status", "approved")
         .eq("category_slug", slug)
         .order("created_at", { ascending: false });

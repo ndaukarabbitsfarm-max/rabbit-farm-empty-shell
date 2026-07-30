@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, Rabbit, Boxes, Wheat, Wrench } from "lucide-react";
+import { ChevronRight, Rabbit, Boxes, Wheat, Wrench, Bird } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
 import { CATEGORIES } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 
 const ICONS = {
   "breeding-rabbits": Rabbit,
+  poultry: Bird,
   "custom-cages": Boxes,
   "feeds-supplements": Wheat,
   equipment: Wrench,

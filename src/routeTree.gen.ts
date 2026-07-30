@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostRouteImport } from './routes/post'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as CategoriesRouteImport } from './routes/categories'
@@ -37,6 +38,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const PostRoute = PostRouteImport.update({
   id: '/post',
   path: '/post',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyListingsRoute = MyListingsRouteImport.update({
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
+  '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
+  '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
+  '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/messages'
     | '/my-listings'
+    | '/orders'
     | '/post'
     | '/profile'
     | '/sitemap.xml'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/messages'
     | '/my-listings'
+    | '/orders'
     | '/post'
     | '/profile'
     | '/sitemap.xml'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/messages'
     | '/my-listings'
+    | '/orders'
     | '/post'
     | '/profile'
     | '/sitemap.xml'
@@ -203,6 +215,7 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
+  OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
   ProfileRoute: typeof ProfileRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       path: '/post'
       fullPath: '/post'
       preLoaderRoute: typeof PostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-listings': {
@@ -334,6 +354,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,
+  OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
   ProfileRoute: ProfileRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

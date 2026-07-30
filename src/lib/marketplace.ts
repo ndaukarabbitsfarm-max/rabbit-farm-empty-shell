@@ -1,4 +1,14 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
+
+/**
+ * Seller contact columns are not readable by signed-out visitors, so public
+ * listing queries must select an explicit column list.
+ */
+export const PUBLIC_PRODUCT_COLUMNS =
+  "id, seller_id, title, category_slug, breed, quantity, price_tzs, description, region, city, media_urls, status, created_at, updated_at" as const;
+
+export type PublicProduct = Omit<Tables<"products">, "contact_phone" | "whatsapp">;
 
 export const CATEGORIES = [
   { slug: "breeding-rabbits", name: "Breeding Rabbits", sw: "Sungura wa Kuzalisha" },

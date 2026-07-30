@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { MapPin, ImageOff } from "lucide-react";
 import { categoryName, formatTZS, resolveMediaUrls } from "@/lib/marketplace";
+import type { PublicProduct } from "@/lib/marketplace";
 import { Badge } from "@/components/ui/badge";
-import type { Tables } from "@/integrations/supabase/types";
 
-export function ProductCard({ product }: { product: Tables<"products"> }) {
+export function ProductCard({ product }: { product: PublicProduct }) {
   const [cover, setCover] = useState<string | null>(null);
 
   useEffect(() => {

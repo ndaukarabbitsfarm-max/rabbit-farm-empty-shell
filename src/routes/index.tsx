@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Search, PackageOpen, SlidersHorizontal, Rabbit } from "lucide-react";
-import { MobileShell } from "@/components/MobileShell";
+import { MobileShell, CartButton } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProductCard } from "@/components/ProductCard";
 import { Input } from "@/components/ui/input";

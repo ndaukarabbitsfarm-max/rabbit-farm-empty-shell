@@ -14,6 +14,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -46,6 +47,11 @@ const OrdersRoute = OrdersRouteImport.update({
 const MyListingsRoute = MyListingsRouteImport.update({
   id: '/my-listings',
   path: '/my-listings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriesRoute = CategoriesRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/messages': typeof MessagesRoute
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/messages': typeof MessagesRoute
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/messages': typeof MessagesRoute
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/categories'
+    | '/messages'
     | '/my-listings'
     | '/orders'
     | '/post'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/categories'
+    | '/messages'
     | '/my-listings'
     | '/orders'
     | '/post'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/categories'
+    | '/messages'
     | '/my-listings'
     | '/orders'
     | '/post'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CategoriesRoute: typeof CategoriesRoute
+  MessagesRoute: typeof MessagesRoute
   MyListingsRoute: typeof MyListingsRoute
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/my-listings'
       fullPath: '/my-listings'
       preLoaderRoute: typeof MyListingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categories': {
@@ -301,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CategoriesRoute: CategoriesRoute,
+  MessagesRoute: MessagesRoute,
   MyListingsRoute: MyListingsRoute,
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,

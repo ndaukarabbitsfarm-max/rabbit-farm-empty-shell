@@ -1,15 +1,36 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, LayoutGrid, PlusCircle, ClipboardList, User } from "lucide-react";
+import { Home, LayoutGrid, PlusCircle, ClipboardList, User, MessageSquare } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/lib/cart";
 
 const TABS = [
   { to: "/", label: "Home", icon: Home },
   { to: "/categories", label: "Categories", icon: LayoutGrid },
   { to: "/post", label: "Post Item", icon: PlusCircle },
-  { to: "/orders", label: "My Orders", icon: ClipboardList },
+  { to: "/messages", label: "Messages", icon: MessageSquare },
+  { to: "/orders", label: "Orders", icon: ClipboardList },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
+
+export function CartButton() {
+  const { count } = useCart();
+  return (
+    <Link
+      to="/cart"
+      aria-label="Open cart"
+      className="relative flex h-10 w-10 items-center justify-center rounded-full bg-accent text-accent-foreground"
+    >
+      <ShoppingCart className="h-[18px] w-[18px]" />
+      {count > 0 ? (
+        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+          {count}
+        </span>
+      ) : null}
+    </Link>
+  );
+}
 
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

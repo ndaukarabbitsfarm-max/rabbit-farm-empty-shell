@@ -82,12 +82,13 @@ function HomePage() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-foreground/15">
             <Rabbit className="h-5 w-5" />
           </span>
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-[11px] uppercase tracking-widest opacity-80">Karibu</p>
             <h1 className="text-base font-semibold leading-tight">
               Ndauka Rabbits Farm Marketplace
             </h1>
           </div>
+          <CartButton />
         </div>
 
         <div className="relative mt-4">

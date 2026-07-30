@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { PackagePlus, LogIn } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { PackagePlus, LogIn, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProductCard } from "@/components/ProductCard";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { formatTZS } from "@/lib/marketplace";
 
 export const Route = createFileRoute("/my-listings")({
   head: () => ({
@@ -27,6 +29,7 @@ export const Route = createFileRoute("/my-listings")({
 
 function MyListingsPage() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     enabled: Boolean(user),
@@ -41,6 +44,17 @@ function MyListingsPage() {
       return data;
     },
   });
+
+  async function deleteListing(id: string) {
+    if (!window.confirm("Delete this listing? This cannot be undone.")) return;
+    const { error } = await supabase.from("products").delete().eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Listing deleted");
+    await queryClient.invalidateQueries({ queryKey: ["my-listings", user?.id] });
+  }
 
   if (!user) {
     return (
@@ -65,15 +79,34 @@ function MyListingsPage() {
           <Skeleton className="h-28 w-full rounded-2xl" />
         ) : data && data.length > 0 ? (
           data.map((p) => (
-            <div key={p.id} className="space-y-1">
+            <div key={p.id} className="space-y-1.5">
               <ProductCard product={p} />
-              <div className="px-1">
+              <div className="flex items-center justify-between gap-2 px-1">
                 <Badge
                   variant={p.status === "approved" ? "default" : "secondary"}
                   className="text-[10px] capitalize"
                 >
                   {p.status}
                 </Badge>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-muted-foreground">
+                    Stock {p.quantity} · {formatTZS(p.price_tzs)}
+                  </span>
+                  <Button asChild variant="outline" size="sm" className="h-8 rounded-lg px-2.5">
+                    <Link to="/listing/$id/edit" params={{ id: p.id }}>
+                      <Pencil className="mr-1 h-3.5 w-3.5" /> Edit
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 rounded-lg px-2.5 text-destructive"
+                    onClick={() => deleteListing(p.id)}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span className="sr-only">Delete listing</span>
+                  </Button>
+                </div>
               </div>
             </div>
           ))

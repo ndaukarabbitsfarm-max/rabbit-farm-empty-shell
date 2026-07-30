@@ -14,12 +14,16 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
+import { Route as ListingIdEditRouteImport } from './routes/listing.$id.edit'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -46,9 +50,19 @@ const MyListingsRoute = MyListingsRouteImport.update({
   path: '/my-listings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategoriesRoute = CategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -71,9 +85,19 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesIdRoute = MessagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MessagesRoute,
+} as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
   path: '/category/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListingIdEditRoute = ListingIdEditRouteImport.update({
+  id: '/listing/$id/edit',
+  path: '/listing/$id/edit',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -81,41 +105,53 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/listing/$id/edit': typeof ListingIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/listing/$id/edit': typeof ListingIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/listing/$id/edit': typeof ListingIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -123,47 +159,61 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
+    | '/cart'
     | '/categories'
+    | '/messages'
     | '/my-listings'
     | '/orders'
     | '/post'
     | '/profile'
     | '/sitemap.xml'
     | '/category/$slug'
+    | '/messages/$id'
     | '/product/$id'
+    | '/listing/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
     | '/auth'
+    | '/cart'
     | '/categories'
+    | '/messages'
     | '/my-listings'
     | '/orders'
     | '/post'
     | '/profile'
     | '/sitemap.xml'
     | '/category/$slug'
+    | '/messages/$id'
     | '/product/$id'
+    | '/listing/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/auth'
+    | '/cart'
     | '/categories'
+    | '/messages'
     | '/my-listings'
     | '/orders'
     | '/post'
     | '/profile'
     | '/sitemap.xml'
     | '/category/$slug'
+    | '/messages/$id'
     | '/product/$id'
+    | '/listing/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  CartRoute: typeof CartRoute
   CategoriesRoute: typeof CategoriesRoute
+  MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
@@ -171,6 +221,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CategorySlugRoute: typeof CategorySlugRoute
   ProductIdRoute: typeof ProductIdRoute
+  ListingIdEditRoute: typeof ListingIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -210,11 +261,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyListingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/categories': {
       id: '/categories'
       path: '/categories'
       fullPath: '/categories'
       preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -245,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages/$id': {
+      id: '/messages/$id'
+      path: '/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof MessagesIdRouteImport
+      parentRoute: typeof MessagesRoute
+    }
     '/category/$slug': {
       id: '/category/$slug'
       path: '/category/$slug'
@@ -252,14 +324,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/listing/$id/edit': {
+      id: '/listing/$id/edit'
+      path: '/listing/$id/edit'
+      fullPath: '/listing/$id/edit'
+      preLoaderRoute: typeof ListingIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface MessagesRouteChildren {
+  MessagesIdRoute: typeof MessagesIdRoute
+}
+
+const MessagesRouteChildren: MessagesRouteChildren = {
+  MessagesIdRoute: MessagesIdRoute,
+}
+
+const MessagesRouteWithChildren = MessagesRoute._addFileChildren(
+  MessagesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  CartRoute: CartRoute,
   CategoriesRoute: CategoriesRoute,
+  MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
@@ -267,6 +360,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   CategorySlugRoute: CategorySlugRoute,
   ProductIdRoute: ProductIdRoute,
+  ListingIdEditRoute: ListingIdEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

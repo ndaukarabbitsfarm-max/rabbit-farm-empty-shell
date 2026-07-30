@@ -38,6 +38,44 @@ export type Database = {
         }
         Relationships: []
       }
+      conversations: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          id: string
+          last_message_at: string
+          product_id: string | null
+          seller_id: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          product_id?: string | null
+          seller_id: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          product_id?: string | null
+          seller_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       locations: {
         Row: {
           city: string | null
@@ -58,6 +96,44 @@ export type Database = {
           region?: string
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -107,14 +183,17 @@ export type Database = {
       orders: {
         Row: {
           buyer_id: string
+          buyer_name: string | null
+          buyer_phone: string | null
           created_at: string
           delivery_city: string | null
           delivery_region: string | null
           id: string
           notes: string | null
-          product_id: string
+          product_id: string | null
           quantity: number
           seller_id: string
+          shipping_address: string | null
           status: Database["public"]["Enums"]["order_status"]
           total_tzs: number
           transport_cost_tzs: number
@@ -123,14 +202,17 @@ export type Database = {
         }
         Insert: {
           buyer_id: string
+          buyer_name?: string | null
+          buyer_phone?: string | null
           created_at?: string
           delivery_city?: string | null
           delivery_region?: string | null
           id?: string
           notes?: string | null
-          product_id: string
+          product_id?: string | null
           quantity?: number
           seller_id: string
+          shipping_address?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_tzs?: number
           transport_cost_tzs?: number
@@ -139,14 +221,17 @@ export type Database = {
         }
         Update: {
           buyer_id?: string
+          buyer_name?: string | null
+          buyer_phone?: string | null
           created_at?: string
           delivery_city?: string | null
           delivery_region?: string | null
           id?: string
           notes?: string | null
-          product_id?: string
+          product_id?: string | null
           quantity?: number
           seller_id?: string
+          shipping_address?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_tzs?: number
           transport_cost_tzs?: number

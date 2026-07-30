@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Search, PackageOpen, SlidersHorizontal, Rabbit } from "lucide-react";
-import { MobileShell } from "@/components/MobileShell";
+import { MobileShell, CartButton } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProductCard } from "@/components/ProductCard";
 import { Input } from "@/components/ui/input";
@@ -82,12 +82,13 @@ function HomePage() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-foreground/15">
             <Rabbit className="h-5 w-5" />
           </span>
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-[11px] uppercase tracking-widest opacity-80">Karibu</p>
             <h1 className="text-base font-semibold leading-tight">
               Ndauka Rabbits Farm Marketplace
             </h1>
           </div>
+          <CartButton />
         </div>
 
         <div className="relative mt-4">

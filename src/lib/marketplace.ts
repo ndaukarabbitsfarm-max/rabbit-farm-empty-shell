@@ -12,6 +12,7 @@ export type PublicProduct = Omit<Tables<"products">, "contact_phone" | "whatsapp
 
 export const CATEGORIES = [
   { slug: "breeding-rabbits", name: "Breeding Rabbits", sw: "Sungura wa Kuzalisha" },
+  { slug: "poultry", name: "Poultry", sw: "Kuku na Ndege" },
   { slug: "custom-cages", name: "Custom Cages", sw: "Vizimba Maalum" },
   { slug: "feeds-supplements", name: "Feeds & Supplements", sw: "Chakula na Virutubisho" },
   { slug: "equipment", name: "Equipment", sw: "Vifaa" },

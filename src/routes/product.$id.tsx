@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ImageOff, MapPin, Phone, MessageCircle, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ImageOff,
+  MapPin,
+  Phone,
+  MessageCircle,
+  Loader2,
+  ShoppingCart,
+  MessageSquare,
+} from "lucide-react";
 import { toast } from "sonner";
-import { MobileShell } from "@/components/MobileShell";
+import { MobileShell, CartButton } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +28,7 @@ import {
 } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/product/$id")({
   head: () => ({
@@ -42,6 +52,9 @@ export const Route = createFileRoute("/product/$id")({
 function ProductDetailPage() {
   const { id } = useParams({ from: "/product/$id" });
   const { user } = useAuth();
+  const { add } = useCart();
+  const navigate = useNavigate();
+  const [startingChat, setStartingChat] = useState(false);
   const [media, setMedia] = useState<{ url: string; path: string }[]>([]);
   const [qty, setQty] = useState("1");
   const [distanceKm, setDistanceKm] = useState("");
@@ -122,6 +135,44 @@ function ProductDetailPage() {
     }
   }
 
+  async function messageSeller() {
+    if (!product) return;
+    if (!user) {
+      toast.error("Please log in to message the seller");
+      return;
+    }
+    if (user.id === product.seller_id) {
+      toast.error("This is your own listing");
+      return;
+    }
+    setStartingChat(true);
+    try {
+      const { data: existing } = await supabase
+        .from("conversations")
+        .select("id")
+        .eq("buyer_id", user.id)
+        .eq("seller_id", product.seller_id)
+        .eq("product_id", product.id)
+        .maybeSingle();
+
+      let conversationId = existing?.id;
+      if (!conversationId) {
+        const { data, error } = await supabase
+          .from("conversations")
+          .insert({ buyer_id: user.id, seller_id: product.seller_id, product_id: product.id })
+          .select("id")
+          .single();
+        if (error) throw error;
+        conversationId = data.id;
+      }
+      navigate({ to: "/messages/$id", params: { id: conversationId } });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not start the conversation");
+    } finally {
+      setStartingChat(false);
+    }
+  }
+
   if (isLoading) {
     return (
       <MobileShell title="Listing">
@@ -157,11 +208,14 @@ function ProductDetailPage() {
     <MobileShell
       title={product.title}
       right={
-        <Button asChild variant="ghost" size="icon" className="rounded-full">
-          <Link to="/" aria-label="Back to marketplace">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <CartButton />
+          <Button asChild variant="ghost" size="icon" className="rounded-full">
+            <Link to="/" aria-label="Back to marketplace">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       }
     >
       <div className="space-y-4 px-4 pt-4">
@@ -206,6 +260,41 @@ function ProductDetailPage() {
               {product.description}
             </p>
           ) : null}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            className="h-11 rounded-xl"
+            onClick={() => {
+              add(
+                {
+                  productId: product.id,
+                  sellerId: product.seller_id,
+                  title: product.title,
+                  priceTzs: Number(product.price_tzs),
+                  mediaPath: product.media_urls?.[0] ?? null,
+                },
+                Number(qty) || 1,
+              );
+              toast.success("Added to cart");
+            }}
+          >
+            <ShoppingCart className="mr-1.5 h-4 w-4" /> Add to cart
+          </Button>
+          <Button
+            variant="outline"
+            className="h-11 rounded-xl"
+            onClick={messageSeller}
+            disabled={startingChat}
+          >
+            {startingChat ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <MessageSquare className="mr-1.5 h-4 w-4" /> Message seller
+              </>
+            )}
+          </Button>
         </div>
 
         {user ? (

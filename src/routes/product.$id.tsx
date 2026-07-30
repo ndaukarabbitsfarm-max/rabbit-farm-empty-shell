@@ -10,7 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { categoryName, formatTZS, isVideoPath, resolveMediaUrls } from "@/lib/marketplace";
+import {
+  categoryName,
+  formatTZS,
+  isVideoPath,
+  resolveMediaUrls,
+  PUBLIC_PRODUCT_COLUMNS,
+} from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -47,7 +53,26 @@ function ProductDetailPage() {
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("*").eq("id", id).maybeSingle();
+      const { data, error } = await supabase
+        .from("products")
+        .select(PUBLIC_PRODUCT_COLUMNS)
+        .eq("id", id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Seller phone/WhatsApp are readable only by signed-in users.
+  const { data: contact } = useQuery({
+    enabled: Boolean(user && id),
+    queryKey: ["product-contact", id, user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("contact_phone, whatsapp")
+        .eq("id", id)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -125,7 +150,8 @@ function ProductDetailPage() {
     );
   }
 
-  const waNumber = (product.whatsapp || product.contact_phone || "").replace(/[^\d]/g, "");
+  const contactPhone = contact?.contact_phone ?? null;
+  const waNumber = (contact?.whatsapp || contactPhone || "").replace(/[^\d]/g, "");
 
   return (
     <MobileShell
@@ -182,27 +208,33 @@ function ProductDetailPage() {
           ) : null}
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            asChild
-            variant="outline"
-            className="h-11 rounded-xl"
-            disabled={!product.contact_phone}
-          >
-            <a href={product.contact_phone ? `tel:${product.contact_phone}` : "#"}>
-              <Phone className="mr-1.5 h-4 w-4" /> Call Seller
-            </a>
-          </Button>
-          <Button asChild variant="outline" className="h-11 rounded-xl" disabled={!waNumber}>
-            <a
-              href={waNumber ? `https://wa.me/${waNumber}` : "#"}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp
-            </a>
-          </Button>
-        </div>
+        {user ? (
+          <div className="grid grid-cols-2 gap-2">
+            <Button asChild variant="outline" className="h-11 rounded-xl" disabled={!contactPhone}>
+              <a href={contactPhone ? `tel:${contactPhone}` : "#"}>
+                <Phone className="mr-1.5 h-4 w-4" /> Call Seller
+              </a>
+            </Button>
+            <Button asChild variant="outline" className="h-11 rounded-xl" disabled={!waNumber}>
+              <a
+                href={waNumber ? `https://wa.me/${waNumber}` : "#"}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp
+              </a>
+            </Button>
+          </div>
+        ) : (
+          <div className="surface-card flex items-center justify-between gap-3 p-3.5">
+            <p className="text-xs text-muted-foreground">
+              Ingia ili uone namba ya muuzaji — sign in to see seller contact details.
+            </p>
+            <Button asChild size="sm" className="rounded-xl">
+              <Link to="/auth">Sign in</Link>
+            </Button>
+          </div>
+        )}
 
         <div className="surface-card space-y-3 p-4">
           <h3 className="text-sm font-semibold">Shipping & transport estimator</h3>

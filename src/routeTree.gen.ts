@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SellersRouteImport } from './routes/sellers'
+import { Route as RfqRouteImport } from './routes/rfq'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
@@ -41,6 +42,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SellersRoute = SellersRouteImport.update({
   id: '/sellers',
   path: '/sellers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RfqRoute = RfqRouteImport.update({
+  id: '/rfq',
+  path: '/rfq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
+  '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
+  '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
+  '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/post'
     | '/profile'
+    | '/rfq'
     | '/sellers'
     | '/sitemap.xml'
     | '/tips'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/post'
     | '/profile'
+    | '/rfq'
     | '/sellers'
     | '/sitemap.xml'
     | '/tips'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/post'
     | '/profile'
+    | '/rfq'
     | '/sellers'
     | '/sitemap.xml'
     | '/tips'
@@ -255,6 +267,7 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
   ProfileRoute: typeof ProfileRoute
+  RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TipsRoute: typeof TipsRoute
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/sellers'
       fullPath: '/sellers'
       preLoaderRoute: typeof SellersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rfq': {
+      id: '/rfq'
+      path: '/rfq'
+      fullPath: '/rfq'
+      preLoaderRoute: typeof RfqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -418,6 +438,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
   ProfileRoute: ProfileRoute,
+  RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TipsRoute: TipsRoute,

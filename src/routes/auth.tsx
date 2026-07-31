@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { PhoneInput } from "@/components/PhoneInput";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/auth")({
@@ -52,12 +53,16 @@ function AuthPage() {
         if (error) throw error;
         navigate({ to: "/" });
       } else if (!otpSent) {
-const { error } = await supabase.auth.signInWithOtp({ phone });
+        const { error } = await supabase.auth.signInWithOtp({ phone: `${countryCode}${phone}` });
         if (error) throw error;
         setOtpSent(true);
         toast.success("Code sent by SMS");
       } else {
-const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: "sms" });
+        const { error } = await supabase.auth.verifyOtp({
+          phone: `${countryCode}${phone}`,
+          token: otp,
+          type: "sms",
+        });
         if (error) throw error;
         navigate({ to: "/" });
       }
@@ -83,12 +88,19 @@ if (method === "email") {
         if (error) throw error;
         toast.success("Account created. Check your email to confirm.");
       } else if (!otpSent) {
-        const { error } = await supabase.auth.signInWithOtp({ phone, options: { data: metadata } });
+        const { error } = await supabase.auth.signInWithOtp({
+          phone: `${countryCode}${phone}`,
+          options: { data: metadata },
+        });
         if (error) throw error;
         setOtpSent(true);
         toast.success("Code sent by SMS");
       } else {
-const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: "sms" });
+        const { error } = await supabase.auth.verifyOtp({
+          phone: `${countryCode}${phone}`,
+          token: otp,
+          type: "sms",
+        });
         if (error) throw error;
         navigate({ to: "/" });
       }

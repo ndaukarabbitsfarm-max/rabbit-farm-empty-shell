@@ -135,6 +135,39 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -248,6 +281,27 @@ export type Database = {
           },
         ]
       }
+      page_views: {
+        Row: {
+          created_at: string
+          id: string
+          path: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       product_comments: {
         Row: {
           comment: string
@@ -293,6 +347,7 @@ export type Database = {
           description: string | null
           id: string
           media_urls: string[]
+          moq: number
           price_tzs: number
           quantity: number
           region: string | null
@@ -311,6 +366,7 @@ export type Database = {
           description?: string | null
           id?: string
           media_urls?: string[]
+          moq?: number
           price_tzs?: number
           quantity?: number
           region?: string | null
@@ -329,6 +385,7 @@ export type Database = {
           description?: string | null
           id?: string
           media_urls?: string[]
+          moq?: number
           price_tzs?: number
           quantity?: number
           region?: string | null
@@ -351,6 +408,7 @@ export type Database = {
           region: string | null
           role: Database["public"]["Enums"]["user_kind"]
           updated_at: string
+          verified: boolean
           whatsapp: string | null
         }
         Insert: {
@@ -363,6 +421,7 @@ export type Database = {
           region?: string | null
           role?: Database["public"]["Enums"]["user_kind"]
           updated_at?: string
+          verified?: boolean
           whatsapp?: string | null
         }
         Update: {
@@ -375,7 +434,56 @@ export type Database = {
           region?: string | null
           role?: Database["public"]["Enums"]["user_kind"]
           updated_at?: string
+          verified?: boolean
           whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      rfq_requests: {
+        Row: {
+          buyer_id: string
+          category_slug: string
+          contact_phone: string
+          created_at: string
+          details: string | null
+          id: string
+          quantity: number
+          region: string | null
+          status: string
+          target_price_tzs: number | null
+          title: string
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          category_slug: string
+          contact_phone: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          quantity?: number
+          region?: string | null
+          status?: string
+          target_price_tzs?: number | null
+          title: string
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          category_slug?: string
+          contact_phone?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          quantity?: number
+          region?: string | null
+          status?: string
+          target_price_tzs?: number | null
+          title?: string
+          unit?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -402,6 +510,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_stats: {
+        Args: never
+        Returns: {
+          total_products: number
+          total_users: number
+          total_views: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -409,6 +525,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      record_page_view: { Args: { _path: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

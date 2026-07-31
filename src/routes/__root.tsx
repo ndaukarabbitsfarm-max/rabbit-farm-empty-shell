@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/lib/cart";
+import { supabase } from "@/integrations/supabase/client";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -137,6 +138,17 @@ function RootComponent() {
 
   useEffect(() => {
     registerServiceWorker();
+  }, []);
+
+  // Record one app-open per session for the admin analytics panel.
+  useEffect(() => {
+    try {
+      if (window.sessionStorage.getItem("ndauka-visit-logged")) return;
+      window.sessionStorage.setItem("ndauka-visit-logged", "1");
+    } catch {
+      /* storage unavailable */
+    }
+    void supabase.rpc("record_page_view", { _path: window.location.pathname });
   }, []);
 
   return (

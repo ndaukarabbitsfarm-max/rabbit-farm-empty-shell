@@ -9,10 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TipsRouteImport } from './routes/tips'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SellersRouteImport } from './routes/sellers'
+import { Route as RfqRouteImport } from './routes/rfq'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as CategoriesRouteImport } from './routes/categories'
@@ -25,9 +29,24 @@ import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as ListingIdEditRouteImport } from './routes/listing.$id.edit'
 
+const TipsRoute = TipsRouteImport.update({
+  id: '/tips',
+  path: '/tips',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellersRoute = SellersRouteImport.update({
+  id: '/sellers',
+  path: '/sellers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RfqRoute = RfqRouteImport.update({
+  id: '/rfq',
+  path: '/rfq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -43,6 +62,11 @@ const PostRoute = PostRouteImport.update({
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyListingsRoute = MyListingsRouteImport.update({
@@ -109,10 +133,14 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
+  '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
+  '/rfq': typeof RfqRoute
+  '/sellers': typeof SellersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -126,10 +154,14 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
+  '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
+  '/rfq': typeof RfqRoute
+  '/sellers': typeof SellersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -144,10 +176,14 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
+  '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/profile': typeof ProfileRoute
+  '/rfq': typeof RfqRoute
+  '/sellers': typeof SellersRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -163,10 +199,14 @@ export interface FileRouteTypes {
     | '/categories'
     | '/messages'
     | '/my-listings'
+    | '/notifications'
     | '/orders'
     | '/post'
     | '/profile'
+    | '/rfq'
+    | '/sellers'
     | '/sitemap.xml'
+    | '/tips'
     | '/category/$slug'
     | '/messages/$id'
     | '/product/$id'
@@ -180,10 +220,14 @@ export interface FileRouteTypes {
     | '/categories'
     | '/messages'
     | '/my-listings'
+    | '/notifications'
     | '/orders'
     | '/post'
     | '/profile'
+    | '/rfq'
+    | '/sellers'
     | '/sitemap.xml'
+    | '/tips'
     | '/category/$slug'
     | '/messages/$id'
     | '/product/$id'
@@ -197,10 +241,14 @@ export interface FileRouteTypes {
     | '/categories'
     | '/messages'
     | '/my-listings'
+    | '/notifications'
     | '/orders'
     | '/post'
     | '/profile'
+    | '/rfq'
+    | '/sellers'
     | '/sitemap.xml'
+    | '/tips'
     | '/category/$slug'
     | '/messages/$id'
     | '/product/$id'
@@ -215,10 +263,14 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
+  NotificationsRoute: typeof NotificationsRoute
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
   ProfileRoute: typeof ProfileRoute
+  RfqRoute: typeof RfqRoute
+  SellersRoute: typeof SellersRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TipsRoute: typeof TipsRoute
   CategorySlugRoute: typeof CategorySlugRoute
   ProductIdRoute: typeof ProductIdRoute
   ListingIdEditRoute: typeof ListingIdEditRoute
@@ -226,11 +278,32 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tips': {
+      id: '/tips'
+      path: '/tips'
+      fullPath: '/tips'
+      preLoaderRoute: typeof TipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sellers': {
+      id: '/sellers'
+      path: '/sellers'
+      fullPath: '/sellers'
+      preLoaderRoute: typeof SellersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rfq': {
+      id: '/rfq'
+      path: '/rfq'
+      fullPath: '/rfq'
+      preLoaderRoute: typeof RfqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -252,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-listings': {
@@ -354,10 +434,14 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,
+  NotificationsRoute: NotificationsRoute,
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
   ProfileRoute: ProfileRoute,
+  RfqRoute: RfqRoute,
+  SellersRoute: SellersRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TipsRoute: TipsRoute,
   CategorySlugRoute: CategorySlugRoute,
   ProductIdRoute: ProductIdRoute,
   ListingIdEditRoute: ListingIdEditRoute,

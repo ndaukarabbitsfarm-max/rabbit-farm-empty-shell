@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ShieldAlert, Inbox, Check, X } from "lucide-react";
+import { ShieldAlert, Inbox, Check, X, Eye, Users, Package, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
@@ -83,6 +83,41 @@ function AdminPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const { data: stats } = useQuery({
+    enabled: isAdmin,
+    queryKey: ["admin-stats"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("admin_stats");
+      if (error) throw error;
+      return data?.[0] ?? null;
+    },
+  });
+
+  const { data: allSellers } = useQuery({
+    enabled: isAdmin,
+    queryKey: ["admin-all-sellers"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, phone, region, city, verified, approved")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const setVerified = useMutation({
+    mutationFn: async ({ id, verified }: { id: string; verified: boolean }) => {
+      const { error } = await supabase.from("profiles").update({ verified }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Beji imesasishwa");
+      qc.invalidateQueries({ queryKey: ["admin-all-sellers"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   if (loading) return <MobileShell title="Admin Review"><div className="px-4 pt-6" /></MobileShell>;
 
   if (!isAdmin) {
@@ -104,13 +139,30 @@ function AdminPage() {
 
   return (
     <MobileShell title="Admin Review" subtitle="Approve sellers and listings">
+      <div className="grid grid-cols-3 gap-2 px-4 pt-4">
+        {[
+          { icon: Eye, label: "Page views", value: stats?.total_views ?? 0 },
+          { icon: Users, label: "Watumiaji", value: stats?.total_users ?? 0 },
+          { icon: Package, label: "Bidhaa", value: stats?.total_products ?? 0 },
+        ].map((s) => (
+          <div key={s.label} className="surface-card p-3">
+            <s.icon className="h-4 w-4 text-primary" />
+            <p className="pt-1.5 text-lg font-extrabold leading-none">{Number(s.value)}</p>
+            <p className="text-[10px] text-muted-foreground">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
       <Tabs defaultValue="listings" className="px-4 pt-4">
-        <TabsList className="grid w-full grid-cols-2 rounded-xl">
+        <TabsList className="grid w-full grid-cols-3 rounded-xl">
           <TabsTrigger value="listings" className="rounded-lg">
             Listings
           </TabsTrigger>
           <TabsTrigger value="sellers" className="rounded-lg">
             Sellers
+          </TabsTrigger>
+          <TabsTrigger value="verify" className="rounded-lg">
+            Beji
           </TabsTrigger>
         </TabsList>
 
@@ -166,6 +218,34 @@ function AdminPage() {
             ))
           ) : (
             <EmptyState icon={Inbox} title="No seller profiles awaiting approval" />
+          )}
+        </TabsContent>
+
+        <TabsContent value="verify" className="space-y-3 pt-4">
+          {allSellers && allSellers.length > 0 ? (
+            allSellers.map((s) => (
+              <div key={s.id} className="surface-card flex items-center gap-3 p-3.5">
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1 truncate text-sm font-semibold">
+                    {s.full_name || "Unnamed user"}
+                    {s.verified ? <BadgeCheck className="h-4 w-4 text-primary" /> : null}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {s.phone || "No phone"} · {[s.city, s.region].filter(Boolean).join(", ") || "—"}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  variant={s.verified ? "outline" : "default"}
+                  className="rounded-lg"
+                  onClick={() => setVerified.mutate({ id: s.id, verified: !s.verified })}
+                >
+                  {s.verified ? "Ondoa beji" : "Toa beji"}
+                </Button>
+              </div>
+            ))
+          ) : (
+            <EmptyState icon={Inbox} title="Hakuna watumiaji bado" />
           )}
         </TabsContent>
       </Tabs>

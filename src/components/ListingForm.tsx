@@ -22,6 +22,7 @@ type FormState = {
   category_slug: string;
   breed: string;
   quantity: string;
+  moq: string;
   price_tzs: string;
   description: string;
   region: string;
@@ -35,6 +36,7 @@ const EMPTY: FormState = {
   category_slug: "",
   breed: "",
   quantity: "1",
+  moq: "1",
   price_tzs: "",
   description: "",
   region: "",
@@ -73,6 +75,7 @@ export function ListingForm({ productId }: { productId?: string }) {
         category_slug: data.category_slug,
         breed: data.breed ?? "",
         quantity: String(data.quantity),
+        moq: String(data.moq ?? 1),
         price_tzs: String(data.price_tzs),
         description: data.description ?? "",
         region: data.region ?? "",
@@ -132,6 +135,7 @@ export function ListingForm({ productId }: { productId?: string }) {
         category_slug: form.category_slug,
         breed: form.breed || null,
         quantity: Number(form.quantity) || 1,
+        moq: Number(form.moq) || 1,
         price_tzs: Number(form.price_tzs) || 0,
         description: form.description || null,
         region: form.region || null,
@@ -266,13 +270,20 @@ export function ListingForm({ productId }: { productId?: string }) {
         placeholder="e.g. Chinchilla, Flemish Giant"
       />
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <Field
           id="quantity"
           label="Stock quantity"
           type="number"
           value={form.quantity}
           onChange={(v) => set("quantity", v)}
+        />
+        <Field
+          id="moq"
+          label="MOQ"
+          type="number"
+          value={form.moq}
+          onChange={(v) => set("moq", v)}
         />
         <Field
           id="price"

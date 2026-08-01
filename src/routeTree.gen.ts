@@ -20,6 +20,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as HowToSellRouteImport } from './routes/how-to-sell'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as CategoriesRouteImport } from './routes/categories'
@@ -87,6 +88,11 @@ const HowToSellRoute = HowToSellRouteImport.update({
   path: '/how-to-sell',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/coupons': typeof CouponsRoute
   '/favorites': typeof FavoritesRoute
+  '/help': typeof HelpRoute
   '/how-to-sell': typeof HowToSellRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/coupons': typeof CouponsRoute
   '/favorites': typeof FavoritesRoute
+  '/help': typeof HelpRoute
   '/how-to-sell': typeof HowToSellRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/coupons': typeof CouponsRoute
   '/favorites': typeof FavoritesRoute
+  '/help': typeof HelpRoute
   '/how-to-sell': typeof HowToSellRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/coupons'
     | '/favorites'
+    | '/help'
     | '/how-to-sell'
     | '/messages'
     | '/my-listings'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/coupons'
     | '/favorites'
+    | '/help'
     | '/how-to-sell'
     | '/messages'
     | '/my-listings'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/coupons'
     | '/favorites'
+    | '/help'
     | '/how-to-sell'
     | '/messages'
     | '/my-listings'
@@ -299,6 +311,7 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   CouponsRoute: typeof CouponsRoute
   FavoritesRoute: typeof FavoritesRoute
+  HelpRoute: typeof HelpRoute
   HowToSellRoute: typeof HowToSellRoute
   MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
@@ -392,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/how-to-sell'
       fullPath: '/how-to-sell'
       preLoaderRoute: typeof HowToSellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorites': {
@@ -494,6 +514,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   CouponsRoute: CouponsRoute,
   FavoritesRoute: FavoritesRoute,
+  HelpRoute: HelpRoute,
   HowToSellRoute: HowToSellRoute,
   MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,

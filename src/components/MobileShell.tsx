@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, GraduationCap, MessageCircle, ShoppingCart, User, Bell } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Home, GraduationCap, MessageCircle, ShoppingCart, User, Bell, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/cart";
 import { useNotifications } from "@/lib/notifications";
+import { useAuth } from "@/hooks/useAuth";
 
 const TABS = [
   { to: "/", label: "Nyumbani", icon: Home },
@@ -80,6 +82,44 @@ export function NotificationBell({ onBrand }: { onBrand?: boolean }) {
   );
 }
 
+export function PostItemFab() {
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (pathname.startsWith("/post") || pathname.startsWith("/auth")) return null;
+
+  const isSeller = profile?.role === "seller";
+
+  function handleClick() {
+    if (!user) {
+      toast.info("Ingia kwenye akaunti yako ili kuweka bidhaa", {
+        action: { label: "Ingia", onClick: () => navigate({ to: "/auth" }) },
+      });
+      return;
+    }
+    if (!isSeller) {
+      toast.info("Badilisha wasifu wako kuwa Seller/Breeder ili kuweka bidhaa", {
+        action: { label: "Badilisha", onClick: () => navigate({ to: "/profile" }) },
+      });
+      return;
+    }
+    navigate({ to: "/post" });
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      aria-label="Weka bidhaa mpya"
+      className="fixed bottom-20 right-4 z-40 flex items-center gap-1.5 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform active:scale-95"
+    >
+      <Plus className="h-5 w-5" strokeWidth={2.6} />
+      Weka Bidhaa
+    </button>
+  );
+}
+
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { count } = useCart();
@@ -149,7 +189,12 @@ export function MobileShell({
         </header>
       ) : null}
       <main className={cn("flex-1", hideNav ? "pb-8" : "safe-bottom")}>{children}</main>
-      {hideNav ? null : <BottomNav />}
+      {hideNav ? null : (
+        <>
+          <PostItemFab />
+          <BottomNav />
+        </>
+      )}
     </div>
   );
 }

@@ -8,11 +8,11 @@ import { useNotifications } from "@/lib/notifications";
 import { useAuth } from "@/hooks/useAuth";
 
 const TABS = [
-  { to: "/", label: "Nyumbani", icon: Home },
-  { to: "/tips", label: "Elimika", icon: GraduationCap },
+  { to: "/", label: "Home", icon: Home },
+  { to: "/tips", label: "Tips", icon: GraduationCap },
   { to: "/messages", label: "Messenger", icon: MessageCircle },
-  { to: "/cart", label: "Kikapu", icon: ShoppingCart },
-  { to: "/profile", label: "Akaunti", icon: User },
+  { to: "/cart", label: "Cart", icon: ShoppingCart },
+  { to: "/profile", label: "My Alibaba", icon: User },
 ] as const;
 
 export const TOP_TABS = [
@@ -91,16 +91,14 @@ export function PostItemFab() {
 
   const isSeller = profile?.role === "seller";
 
+  // Buyers never see the floating button; their Profile page shows a
+  // "Want to sell? Switch to Seller" link instead.
+  if (user && !isSeller) return null;
+
   function handleClick() {
     if (!user) {
       toast.info("Ingia kwenye akaunti yako ili kuweka bidhaa", {
         action: { label: "Ingia", onClick: () => navigate({ to: "/auth" }) },
-      });
-      return;
-    }
-    if (!isSeller) {
-      toast.info("Badilisha wasifu wako kuwa Seller/Breeder ili kuweka bidhaa", {
-        action: { label: "Badilisha", onClick: () => navigate({ to: "/profile" }) },
       });
       return;
     }
@@ -112,10 +110,9 @@ export function PostItemFab() {
       type="button"
       onClick={handleClick}
       aria-label="Weka bidhaa mpya"
-      className="fixed bottom-20 right-4 z-40 flex items-center gap-1.5 rounded-full bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg transition-transform active:scale-95"
+      className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform active:scale-95"
     >
-      <Plus className="h-5 w-5" strokeWidth={2.6} />
-      Weka Bidhaa
+      <Plus className="h-7 w-7" strokeWidth={2.6} />
     </button>
   );
 }

@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, GraduationCap, MessageCircle, ShoppingCart, User, Bell } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Home, GraduationCap, MessageCircle, ShoppingCart, User, Bell, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/cart";
 import { useNotifications } from "@/lib/notifications";
+import { useAuth } from "@/hooks/useAuth";
 
 const TABS = [
   { to: "/", label: "Nyumbani", icon: Home },
@@ -81,6 +83,8 @@ export function NotificationBell({ onBrand }: { onBrand?: boolean }) {
 }
 
 export function BottomNav() {
+  return null as never;
+}
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { count } = useCart();
 

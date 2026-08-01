@@ -11,18 +11,25 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as RfqRouteImport } from './routes/rfq'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
 import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as HowToSellRouteImport } from './routes/how-to-sell'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MessagesIdRouteImport } from './routes/messages.$id'
@@ -39,6 +46,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SellersRoute = SellersRouteImport.update({
   id: '/sellers',
   path: '/sellers',
@@ -52,6 +64,11 @@ const RfqRoute = RfqRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostRoute = PostRouteImport.update({
@@ -79,6 +96,26 @@ const MessagesRoute = MessagesRouteImport.update({
   path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowToSellRoute = HowToSellRouteImport.update({
+  id: '/how-to-sell',
+  path: '/how-to-sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CouponsRoute = CouponsRouteImport.update({
+  id: '/coupons',
+  path: '/coupons',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategoriesRoute = CategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -97,6 +134,11 @@ const AuthRoute = AuthRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -127,18 +169,25 @@ const ListingIdEditRoute = ListingIdEditRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/coupons': typeof CouponsRoute
+  '/favorites': typeof FavoritesRoute
+  '/help': typeof HelpRoute
+  '/how-to-sell': typeof HowToSellRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -148,18 +197,25 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/coupons': typeof CouponsRoute
+  '/favorites': typeof FavoritesRoute
+  '/help': typeof HelpRoute
+  '/how-to-sell': typeof HowToSellRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -170,18 +226,25 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
+  '/coupons': typeof CouponsRoute
+  '/favorites': typeof FavoritesRoute
+  '/help': typeof HelpRoute
+  '/how-to-sell': typeof HowToSellRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -193,18 +256,25 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
     | '/cart'
     | '/categories'
+    | '/coupons'
+    | '/favorites'
+    | '/help'
+    | '/how-to-sell'
     | '/messages'
     | '/my-listings'
     | '/notifications'
     | '/orders'
     | '/post'
+    | '/privacy'
     | '/profile'
     | '/rfq'
     | '/sellers'
+    | '/settings'
     | '/sitemap.xml'
     | '/tips'
     | '/category/$slug'
@@ -214,18 +284,25 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
     | '/cart'
     | '/categories'
+    | '/coupons'
+    | '/favorites'
+    | '/help'
+    | '/how-to-sell'
     | '/messages'
     | '/my-listings'
     | '/notifications'
     | '/orders'
     | '/post'
+    | '/privacy'
     | '/profile'
     | '/rfq'
     | '/sellers'
+    | '/settings'
     | '/sitemap.xml'
     | '/tips'
     | '/category/$slug'
@@ -235,18 +312,25 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/auth'
     | '/cart'
     | '/categories'
+    | '/coupons'
+    | '/favorites'
+    | '/help'
+    | '/how-to-sell'
     | '/messages'
     | '/my-listings'
     | '/notifications'
     | '/orders'
     | '/post'
+    | '/privacy'
     | '/profile'
     | '/rfq'
     | '/sellers'
+    | '/settings'
     | '/sitemap.xml'
     | '/tips'
     | '/category/$slug'
@@ -257,18 +341,25 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CategoriesRoute: typeof CategoriesRoute
+  CouponsRoute: typeof CouponsRoute
+  FavoritesRoute: typeof FavoritesRoute
+  HelpRoute: typeof HelpRoute
+  HowToSellRoute: typeof HowToSellRoute
   MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
   NotificationsRoute: typeof NotificationsRoute
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
+  SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TipsRoute: typeof TipsRoute
   CategorySlugRoute: typeof CategorySlugRoute
@@ -292,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sellers': {
       id: '/sellers'
       path: '/sellers'
@@ -311,6 +409,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post': {
@@ -348,6 +453,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-to-sell': {
+      id: '/how-to-sell'
+      path: '/how-to-sell'
+      fullPath: '/how-to-sell'
+      preLoaderRoute: typeof HowToSellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coupons': {
+      id: '/coupons'
+      path: '/coupons'
+      fullPath: '/coupons'
+      preLoaderRoute: typeof CouponsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/categories': {
       id: '/categories'
       path: '/categories'
@@ -374,6 +507,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -428,18 +568,25 @@ const MessagesRouteWithChildren = MessagesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CategoriesRoute: CategoriesRoute,
+  CouponsRoute: CouponsRoute,
+  FavoritesRoute: FavoritesRoute,
+  HelpRoute: HelpRoute,
+  HowToSellRoute: HowToSellRoute,
   MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,
   NotificationsRoute: NotificationsRoute,
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,
+  SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TipsRoute: TipsRoute,
   CategorySlugRoute: CategorySlugRoute,

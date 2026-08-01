@@ -105,6 +105,66 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          created_at: string
+          followed_id: string
+          follower_id: string
+        }
+        Insert: {
+          created_at?: string
+          followed_id: string
+          follower_id: string
+        }
+        Update: {
+          created_at?: string
+          followed_id?: string
+          follower_id?: string
+        }
+        Relationships: []
+      }
+      kyc_submissions: {
+        Row: {
+          created_at: string
+          farm_photo_paths: string[]
+          id: string
+          id_document_path: string
+          kind: Database["public"]["Enums"]["verification_kind"]
+          notes: string | null
+          reviewed_at: string | null
+          status: Database["public"]["Enums"]["kyc_status"]
+          submitted_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          farm_photo_paths?: string[]
+          id?: string
+          id_document_path: string
+          kind?: Database["public"]["Enums"]["verification_kind"]
+          notes?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["kyc_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          farm_photo_paths?: string[]
+          id?: string
+          id_document_path?: string
+          kind?: Database["public"]["Enums"]["verification_kind"]
+          notes?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["kyc_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       locations: {
         Row: {
           city: string | null
@@ -331,6 +391,38 @@ export type Database = {
         }
         Relationships: []
       }
+      price_tiers: {
+        Row: {
+          created_at: string
+          id: string
+          min_qty: number
+          price_tzs: number
+          product_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          min_qty: number
+          price_tzs: number
+          product_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          min_qty?: number
+          price_tzs?: number
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_tiers_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_comments: {
         Row: {
           comment: string
@@ -377,6 +469,7 @@ export type Database = {
           id: string
           media_urls: string[]
           moq: number
+          pedigree_verified: boolean
           price_tzs: number
           quantity: number
           region: string | null
@@ -384,6 +477,7 @@ export type Database = {
           status: Database["public"]["Enums"]["listing_status"]
           title: string
           updated_at: string
+          vaccination_records: string | null
           whatsapp: string | null
         }
         Insert: {
@@ -396,6 +490,7 @@ export type Database = {
           id?: string
           media_urls?: string[]
           moq?: number
+          pedigree_verified?: boolean
           price_tzs?: number
           quantity?: number
           region?: string | null
@@ -403,6 +498,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["listing_status"]
           title: string
           updated_at?: string
+          vaccination_records?: string | null
           whatsapp?: string | null
         }
         Update: {
@@ -415,6 +511,7 @@ export type Database = {
           id?: string
           media_urls?: string[]
           moq?: number
+          pedigree_verified?: boolean
           price_tzs?: number
           quantity?: number
           region?: string | null
@@ -422,6 +519,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["listing_status"]
           title?: string
           updated_at?: string
+          vaccination_records?: string | null
           whatsapp?: string | null
         }
         Relationships: []
@@ -437,7 +535,11 @@ export type Database = {
           phone: string | null
           region: string | null
           role: Database["public"]["Enums"]["user_kind"]
+          suspended: boolean
           updated_at: string
+          verification_kind:
+            | Database["public"]["Enums"]["verification_kind"]
+            | null
           verified: boolean
           whatsapp: string | null
         }
@@ -451,7 +553,11 @@ export type Database = {
           phone?: string | null
           region?: string | null
           role?: Database["public"]["Enums"]["user_kind"]
+          suspended?: boolean
           updated_at?: string
+          verification_kind?:
+            | Database["public"]["Enums"]["verification_kind"]
+            | null
           verified?: boolean
           whatsapp?: string | null
         }
@@ -465,11 +571,107 @@ export type Database = {
           phone?: string | null
           region?: string | null
           role?: Database["public"]["Enums"]["user_kind"]
+          suspended?: boolean
           updated_at?: string
+          verification_kind?:
+            | Database["public"]["Enums"]["verification_kind"]
+            | null
           verified?: boolean
           whatsapp?: string | null
         }
         Relationships: []
+      }
+      reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          product_id: string | null
+          reason: string
+          reported_user_id: string
+          reporter_id: string
+          status: Database["public"]["Enums"]["report_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          product_id?: string | null
+          reason: string
+          reported_user_id: string
+          reporter_id: string
+          status?: Database["public"]["Enums"]["report_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          product_id?: string | null
+          reason?: string
+          reported_user_id?: string
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["report_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string
+          rating: number
+          reviewer_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id: string
+          rating: number
+          reviewer_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string
+          rating?: number
+          reviewer_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rfq_requests: {
         Row: {
@@ -537,6 +739,70 @@ export type Database = {
         }
         Relationships: []
       }
+      video_likes: {
+        Row: {
+          created_at: string
+          user_id: string
+          video_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+          video_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_likes_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "video_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_posts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          product_id: string | null
+          seller_id: string
+          updated_at: string
+          video_path: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          seller_id: string
+          updated_at?: string
+          video_path: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          product_id?: string | null
+          seller_id?: string
+          updated_at?: string
+          video_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_posts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -561,6 +827,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      kyc_status: "pending" | "approved" | "rejected"
       listing_status: "pending" | "approved" | "rejected"
       order_status:
         | "requested"
@@ -568,7 +835,9 @@ export type Database = {
         | "in_transit"
         | "completed"
         | "cancelled"
+      report_status: "open" | "reviewed" | "actioned"
       user_kind: "buyer" | "seller"
+      verification_kind: "breeder" | "builder"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -697,6 +966,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      kyc_status: ["pending", "approved", "rejected"],
       listing_status: ["pending", "approved", "rejected"],
       order_status: [
         "requested",
@@ -705,7 +975,9 @@ export const Constants = {
         "completed",
         "cancelled",
       ],
+      report_status: ["open", "reviewed", "actioned"],
       user_kind: ["buyer", "seller"],
+      verification_kind: ["breeder", "builder"],
     },
   },
 } as const

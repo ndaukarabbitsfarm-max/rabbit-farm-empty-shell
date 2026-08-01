@@ -1,25 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { LogIn, LogOut, ShieldCheck, Package, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  LogIn,
+  LogOut,
+  ShieldCheck,
+  Package,
+  Loader2,
+  ClipboardList,
+  MessageCircle,
+  ShoppingCart,
+  Heart,
+  Ticket,
+  BadgeCheck,
+  HelpCircle,
+  Globe,
+  Settings as SettingsIcon,
+  Info,
+  User as UserIcon,
+  Camera,
+  Store,
+} from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
+import { ProfileMenuRow } from "@/components/ProfileMenuRow";
+import { KycSection } from "@/components/KycSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { usePrefs } from "@/lib/prefs";
+import { useUnreadMessages } from "@/lib/unread";
+import { signedUrl } from "@/lib/storage";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Profile — Ndauka Rabbits Farm Marketplace" },
+      { title: "My Alibaba — Ndauka Farm Marketplace" },
       {
         name: "description",
         content: "Manage your buyer or seller profile, contact details and location on the marketplace.",
       },
-      { property: "og:title", content: "Profile — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "My Alibaba — Ndauka Farm Marketplace" },
       { property: "og:description", content: "Manage your buyer or seller profile and contacts." },
     ],
   }),
@@ -29,8 +54,33 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const { user, profile, isAdmin, refreshProfile, signOut } = useAuth();
   const navigate = useNavigate();
+  const { t, currency, lang } = usePrefs();
+  const unread = useUnreadMessages();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ full_name: "", phone: "", whatsapp: "", region: "", city: "" });
+
+  const { data: avatarUrl, refetch: refetchAvatar } = useQuery({
+    enabled: Boolean(profile?.avatar_url),
+    queryKey: ["avatar", profile?.avatar_url],
+    queryFn: () => signedUrl("avatars", profile?.avatar_url),
+  });
+
+  const { data: kyc } = useQuery({
+    enabled: Boolean(user),
+    queryKey: ["kyc", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("kyc_submissions")
+        .select("*")
+        .eq("user_id", user!.id)
+        .order("submitted_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    },
+  });
 
   useEffect(() => {
     if (profile) {
@@ -46,7 +96,7 @@ function ProfilePage() {
 
   if (!user) {
     return (
-      <MobileShell title="Profile">
+      <MobileShell title="My Alibaba">
         <EmptyState
           icon={LogIn}
           title="You are not signed in"
@@ -73,41 +123,149 @@ function ProfilePage() {
     }
   }
 
+  async function uploadAvatar(file: File) {
+    setUploading(true);
+    const path = `${user!.id}/avatar-${Date.now()}-${file.name}`;
+    const up = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (up.error) {
+      setUploading(false);
+      toast.error(up.error.message);
+      return;
+    }
+    const { error } = await supabase.from("profiles").update({ avatar_url: path }).eq("id", user!.id);
+    setUploading(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Picha imewekwa");
+      await refreshProfile();
+      await refetchAvatar();
+    }
+  }
+
+  async function becomeSeller() {
+    const { error } = await supabase.from("profiles").update({ role: "seller" }).eq("id", user!.id);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Wasifu wako sasa ni Seller / Breeder");
+      await refreshProfile();
+    }
+  }
+
+  const isSeller = profile?.role === "seller";
+  const verifiedBadge =
+    kyc?.status === "approved"
+      ? kyc.kind === "builder"
+        ? "Verified Builder ✔️"
+        : "Verified Breeder ✔️"
+      : null;
+
   return (
-    <MobileShell title="Profile" subtitle={user.email ?? user.phone ?? undefined}>
-      <div className="space-y-4 px-4 pt-4">
-        <div className="surface-card flex items-center gap-3 p-4">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-base font-semibold text-accent-foreground">
-            {(profile?.full_name || user.email || "?").charAt(0).toUpperCase()}
-          </span>
+    <MobileShell title="My Alibaba" subtitle={user.email ?? user.phone ?? undefined}>
+      {/* Header: avatar + name + verification badge space */}
+      <div className="brand-surface px-4 pb-6 pt-4">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            aria-label="Badilisha picha ya wasifu"
+            className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary-foreground/20"
+          >
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Picha ya wasifu" className="h-full w-full object-cover" />
+            ) : (
+              <UserIcon className="h-8 w-8 opacity-70" />
+            )}
+            <span className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-primary-foreground text-primary">
+              {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Camera className="h-3 w-3" />}
+            </span>
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void uploadAvatar(f);
+            }}
+          />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">{profile?.full_name || "Unnamed user"}</p>
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              <Badge variant="secondary" className="text-[10px] capitalize">
-                {profile?.role === "seller" ? "Seller / Breeder" : "Buyer"}
-              </Badge>
-              <Badge variant={profile?.approved ? "default" : "outline"} className="text-[10px]">
-                {profile?.approved ? "Approved" : "Pending approval"}
+            <p className="truncate text-base font-bold">{profile?.full_name || "Unnamed user"}</p>
+            <div className="flex min-h-6 flex-wrap items-center gap-1.5 pt-1">
+              {verifiedBadge ? (
+                <Badge className="bg-primary-foreground text-[10px] text-primary">{verifiedBadge}</Badge>
+              ) : null}
+              <Badge variant="secondary" className="text-[10px]">
+                {isSeller ? "Seller / Breeder" : "Buyer"}
               </Badge>
               {isAdmin ? <Badge className="text-[10px]">Admin</Badge> : null}
             </div>
           </div>
         </div>
+        {!isSeller ? (
+          <button
+            type="button"
+            onClick={() => void becomeSeller()}
+            className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold underline"
+          >
+            <Store className="h-3.5 w-3.5" /> {t("wantToSell")}
+          </button>
+        ) : null}
+      </div>
 
-        <div className="grid gap-2">
-          <Button asChild variant="outline" className="h-11 justify-start rounded-xl">
-            <Link to="/my-listings">
-              <Package className="mr-2 h-4 w-4" /> My Listings
-            </Link>
-          </Button>
-          {isAdmin ? (
+      <div className="space-y-4 px-0 pt-3">
+        {/* Primary menu */}
+        <nav className="mx-3 overflow-hidden rounded-2xl bg-card shadow-sm">
+          <ProfileMenuRow to="/orders" icon={ClipboardList} label={t("manageOrders")} />
+          <ProfileMenuRow to="/messages" icon={MessageCircle} label={t("messenger")} dot={unread > 0} />
+          <ProfileMenuRow to="/cart" icon={ShoppingCart} label={t("shoppingCart")} />
+          <ProfileMenuRow to="/favorites" icon={Heart} label={t("favorites")} />
+          <ProfileMenuRow to="/coupons" icon={Ticket} label={t("coupons")} />
+          <ProfileMenuRow to="/how-to-sell" icon={BadgeCheck} label={t("howToSell")} />
+          <ProfileMenuRow to="/help" icon={HelpCircle} label={t("help")} />
+        </nav>
+
+        {/* Separated settings band */}
+        <div className="bg-muted/60 py-3">
+          <nav className="mx-3 overflow-hidden rounded-2xl bg-card shadow-sm">
+            <ProfileMenuRow
+              to="/settings"
+              icon={Globe}
+              label={t("regionCurrency")}
+              value={`${currency} · ${lang.toUpperCase()}`}
+            />
+            <ProfileMenuRow to="/settings" icon={SettingsIcon} label={t("settings")} />
+            <ProfileMenuRow to="/about" icon={Info} label={t("about")} />
+          </nav>
+        </div>
+
+        <div className="space-y-4 px-3">
+          {/* Safety banner */}
+          <div className="flex items-center gap-3 rounded-2xl bg-accent p-4 text-accent-foreground">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold">{t("safetyTitle")}</p>
+              <p className="pt-1 text-xs leading-snug opacity-90">{t("safetyBody")}</p>
+            </div>
+            <ShieldCheck className="h-10 w-10 shrink-0 opacity-70" />
+          </div>
+
+          <div className="grid gap-2">
             <Button asChild variant="outline" className="h-11 justify-start rounded-xl">
-              <Link to="/admin">
-                <ShieldCheck className="mr-2 h-4 w-4" /> Admin review
+              <Link to="/my-listings">
+                <Package className="mr-2 h-4 w-4" /> My Listings
               </Link>
             </Button>
-          ) : null}
-        </div>
+            {isAdmin ? (
+              <Button asChild variant="outline" className="h-11 justify-start rounded-xl">
+                <Link to="/admin">
+                  <ShieldCheck className="mr-2 h-4 w-4" /> Admin review
+                </Link>
+              </Button>
+            ) : null}
+          </div>
+
+          <KycSection />
 
         <form onSubmit={save} className="surface-card space-y-3 p-4">
           <h3 className="text-sm font-semibold">Contact details</h3>
@@ -145,6 +303,7 @@ function ProfilePage() {
         >
           <LogOut className="mr-2 h-4 w-4" /> Log out
         </Button>
+        </div>
       </div>
     </MobileShell>
   );

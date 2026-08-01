@@ -6,7 +6,7 @@ import type { Tables } from "@/integrations/supabase/types";
  * listing queries must select an explicit column list.
  */
 export const PUBLIC_PRODUCT_COLUMNS =
-  "id, seller_id, title, category_slug, breed, quantity, moq, price_tzs, description, region, city, media_urls, status, created_at, updated_at" as const;
+  "id, seller_id, title, category_slug, breed, quantity, moq, price_tzs, description, region, city, media_urls, status, pedigree_verified, vaccination_records, created_at, updated_at" as const;
 
 export type PublicProduct = Omit<Tables<"products">, "contact_phone" | "whatsapp">;
 

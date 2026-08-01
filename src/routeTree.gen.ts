@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as RfqRouteImport } from './routes/rfq'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -43,6 +44,11 @@ const TipsRoute = TipsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SellersRoute = SellersRouteImport.update({
@@ -181,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -236,6 +244,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
+  '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -265,6 +274,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/rfq'
     | '/sellers'
+    | '/settings'
     | '/sitemap.xml'
     | '/tips'
     | '/category/$slug'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/rfq'
     | '/sellers'
+    | '/settings'
     | '/sitemap.xml'
     | '/tips'
     | '/category/$slug'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/rfq'
     | '/sellers'
+    | '/settings'
     | '/sitemap.xml'
     | '/tips'
     | '/category/$slug'
@@ -347,6 +359,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
+  SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TipsRoute: typeof TipsRoute
   CategorySlugRoute: typeof CategorySlugRoute
@@ -368,6 +381,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sellers': {
@@ -566,6 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,
+  SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TipsRoute: TipsRoute,
   CategorySlugRoute: CategorySlugRoute,

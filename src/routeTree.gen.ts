@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as RfqRouteImport } from './routes/rfq'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -57,6 +58,11 @@ const RfqRoute = RfqRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostRoute = PostRouteImport.update({
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
@@ -197,6 +204,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/orders'
     | '/post'
+    | '/privacy'
     | '/profile'
     | '/rfq'
     | '/sellers'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/orders'
     | '/post'
+    | '/privacy'
     | '/profile'
     | '/rfq'
     | '/sellers'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/orders'
     | '/post'
+    | '/privacy'
     | '/profile'
     | '/rfq'
     | '/sellers'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
@@ -376,6 +389,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post': {
@@ -542,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,

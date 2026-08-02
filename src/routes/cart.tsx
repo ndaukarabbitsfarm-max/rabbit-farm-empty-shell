@@ -33,10 +33,11 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  const { items, subtotal, setQuantity, remove, clear } = useCart();
+  const { items, subtotal, setQuantity, remove, clear, clearSeller } = useCart();
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [sellerNames, setSellerNames] = useState<Record<string, string>>({});
   const [buyerName, setBuyerName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -47,8 +48,28 @@ function CartPage() {
   const transportCost = Number(transport) || 0;
   const total = subtotal + transportCost;
 
-  async function checkout(e: React.FormEvent) {
-    e.preventDefault();
+  const sellerIds = Array.from(new Set(items.map((i) => i.sellerId)));
+
+  useEffect(() => {
+    if (!sellerIds.length) return;
+    let active = true;
+    void supabase
+      .from("profiles")
+      .select("id, full_name")
+      .in("id", sellerIds)
+      .then(({ data }) => {
+        if (!active || !data) return;
+        setSellerNames(
+          Object.fromEntries(data.map((p) => [p.id, p.full_name ?? "Mfugaji"])),
+        );
+      });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sellerIds.join(",")]);
+
+  async function placeOrders(sellers: string[]) {
     if (!user) {
       toast.error("Please sign in to place your order");
       return;
@@ -56,9 +77,9 @@ function CartPage() {
     if (!items.length) return;
     setSubmitting(true);
     try {
-      const sellers = Array.from(new Set(items.map((i) => i.sellerId)));
       for (const sellerId of sellers) {
         const sellerItems = items.filter((i) => i.sellerId === sellerId);
+        if (!sellerItems.length) continue;
         const sellerSubtotal = sellerItems.reduce((n, i) => n + i.quantity * i.priceTzs, 0);
         const share = subtotal > 0 ? (sellerSubtotal / subtotal) * transportCost : 0;
         const first = sellerItems[0];
@@ -94,14 +115,20 @@ function CartPage() {
         if (itemsError) throw itemsError;
       }
 
-      clear();
-      toast.success("Order submitted to the seller");
+      if (sellers.length === sellerIds.length) clear();
+      else sellers.forEach((s) => clearSeller(s));
+      toast.success("Ombi la agizo limetumwa kwa muuzaji");
       navigate({ to: "/orders" });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not submit your order");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function checkout(e: React.FormEvent) {
+    e.preventDefault();
+    await placeOrders(sellerIds);
   }
 
   if (!items.length) {
@@ -124,8 +151,19 @@ function CartPage() {
   return (
     <MobileShell title="Cart" subtitle="Kikapu chako">
       <div className="space-y-4 px-4 pt-4">
-        <ul className="space-y-2.5">
-          {items.map((i) => (
+        {sellerIds.map((sellerId) => {
+          const group = items.filter((i) => i.sellerId === sellerId);
+          const groupTotal = group.reduce((n, i) => n + i.quantity * i.priceTzs, 0);
+          return (
+            <section key={sellerId} className="space-y-2.5">
+              <div className="flex items-center justify-between px-1">
+                <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  {sellerNames[sellerId] ?? "Mfugaji"}
+                </h2>
+                <span className="text-xs font-semibold text-primary">{formatTZS(groupTotal)}</span>
+              </div>
+              <ul className="space-y-2.5">
+          {group.map((i) => (
             <li key={i.productId} className="surface-card p-3.5">
               <div className="flex items-start justify-between gap-2">
                 <Link
@@ -173,7 +211,19 @@ function CartPage() {
               </div>
             </li>
           ))}
-        </ul>
+              </ul>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11 w-full rounded-xl"
+                disabled={submitting || !user}
+                onClick={() => void placeOrders([sellerId])}
+              >
+                Send Order Request
+              </Button>
+            </section>
+          );
+        })}
 
         <form onSubmit={checkout} className="surface-card space-y-3 p-4">
           <h2 className="text-sm font-semibold">Delivery details</h2>

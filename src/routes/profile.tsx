@@ -368,6 +368,7 @@ function ProfilePage() {
         </Button>
         </div>
       </div>
+      <CreateMediaDialog kind="story" open={storyOpen} onOpenChange={setStoryOpen} />
     </MobileShell>
   );
 }

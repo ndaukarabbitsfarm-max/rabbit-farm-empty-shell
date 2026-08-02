@@ -20,14 +20,17 @@ import {
   User as UserIcon,
   Camera,
   Store,
+  ClipboardCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProfileMenuRow } from "@/components/ProfileMenuRow";
 import { KycSection } from "@/components/KycSection";
+import { CreateMediaDialog } from "@/components/CreateMediaDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +62,9 @@ function ProfilePage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [storyOpen, setStoryOpen] = useState(false);
+  const [about, setAbout] = useState("");
+  const [savingAbout, setSavingAbout] = useState(false);
   const [form, setForm] = useState({ full_name: "", phone: "", whatsapp: "", region: "", city: "" });
 
   const { data: avatarUrl, refetch: refetchAvatar } = useQuery({
@@ -91,6 +97,7 @@ function ProfilePage() {
         region: profile.region ?? "",
         city: profile.city ?? "",
       });
+      setAbout(profile.about_text ?? "");
     }
   }, [profile]);
 
@@ -151,6 +158,21 @@ function ProfilePage() {
     }
   }
 
+  async function saveAbout(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingAbout(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ about_text: about })
+      .eq("id", user!.id);
+    setSavingAbout(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Maelezo yamehifadhiwa");
+      await refreshProfile();
+    }
+  }
+
   const isSeller = profile?.role === "seller";
   const verifiedBadge =
     kyc?.status === "approved"
@@ -179,6 +201,16 @@ function ProfilePage() {
               {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Camera className="h-3 w-3" />}
             </span>
           </button>
+          {isSellerRole ? (
+            <button
+              type="button"
+              onClick={() => setStoryOpen(true)}
+              aria-label="Anza Story"
+              className="-ml-4 mt-8 flex h-6 w-6 items-center justify-center self-start rounded-full bg-primary-foreground text-xs font-bold text-primary"
+            >
+              +
+            </button>
+          ) : null}
           <input
             ref={fileRef}
             type="file"

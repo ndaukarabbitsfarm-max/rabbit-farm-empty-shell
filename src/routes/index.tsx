@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { MobileShell, CartButton, NotificationBell, TopTabs } from "@/components/MobileShell";
 import { AnimatedSearchBar } from "@/components/AnimatedSearchBar";
+import { StoriesBar } from "@/components/StoriesBar";
 import { EmptyState } from "@/components/EmptyState";
 import { DealCard, ProductTile, ProductMiniCard } from "@/components/CompactProductCard";
 import type { CardProduct } from "@/components/CompactProductCard";
@@ -145,6 +146,9 @@ function HomePage() {
       </div>
 
       <div className="-mt-3 rounded-t-2xl bg-muted/40 pb-4">
+        {/* Stories from sellers (active 24h) */}
+        <StoriesBar />
+
         {/* Shortcut banners */}
         <div className="grid grid-cols-3 gap-2 px-3 pt-3">
           {SHORTCUTS.map((s) => (

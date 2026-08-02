@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatTZS } from "@/lib/marketplace";
@@ -74,6 +75,7 @@ function MyListingsPage() {
 
   return (
     <MobileShell title="My Listings" subtitle="Bidhaa zako">
+      <ErrorBoundary label="my-listings">
       <div className="space-y-3 px-4 pt-4">
         {isLoading ? (
           <Skeleton className="h-28 w-full rounded-2xl" />
@@ -123,6 +125,7 @@ function MyListingsPage() {
           />
         )}
       </div>
+      </ErrorBoundary>
     </MobileShell>
   );
 }

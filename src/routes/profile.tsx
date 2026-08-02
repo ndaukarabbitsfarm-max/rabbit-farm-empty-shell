@@ -295,7 +295,38 @@ function ProfilePage() {
                 </Link>
               </Button>
             ) : null}
+            {isAdmin ? (
+              <Button asChild variant="outline" className="h-11 justify-start rounded-xl">
+                <Link to="/admin/orders">
+                  <ClipboardCheck className="mr-2 h-4 w-4" /> Admin orders
+                </Link>
+              </Button>
+            ) : null}
           </div>
+
+          <form onSubmit={saveAbout} className="surface-card space-y-3 p-4">
+            <h3 className="text-sm font-semibold">
+              {isSeller ? "Kuhusu Shamba" : "Kuhusu mimi"}
+            </h3>
+            <Textarea
+              rows={5}
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+              aria-label={isSeller ? "Maelezo ya shamba" : "Maelezo yako"}
+              placeholder={
+                isSeller
+                  ? "Eleza shamba lako: unafuga nini, uzoefu wa miaka mingapi, mahali ulipo…"
+                  : "Maelezo mafupi kukuhusu…"
+              }
+              className="rounded-xl"
+            />
+            <p className="text-[11px] text-muted-foreground">
+              {isSeller ? "Maelezo haya yataonekana kwa wanunuzi kwenye ukurasa wako." : "Yataonekana kwenye wasifu wako."}
+            </p>
+            <Button type="submit" className="h-11 w-full rounded-xl" disabled={savingAbout}>
+              {savingAbout ? <Loader2 className="h-4 w-4 animate-spin" /> : "Hifadhi maelezo"}
+            </Button>
+          </form>
 
           <KycSection />
 

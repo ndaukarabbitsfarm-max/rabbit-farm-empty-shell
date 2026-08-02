@@ -17,6 +17,15 @@ import { CATEGORIES, isVideoPath, resolveMediaUrls } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
+function safeId() {
+  try {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  } catch {
+    /* fall through to manual id */
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 type FormState = {
   title: string;
   category_slug: string;
@@ -123,7 +132,7 @@ export function ListingForm({ productId }: { productId?: string }) {
       const paths = [...existingPaths];
       for (const file of files) {
         const ext = file.name.split(".").pop() ?? "bin";
-        const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
+        const path = `${user.id}/${safeId()}.${ext}`;
         const { error } = await supabase.storage.from("listings").upload(path, file);
         if (error) throw error;
         paths.push(path);

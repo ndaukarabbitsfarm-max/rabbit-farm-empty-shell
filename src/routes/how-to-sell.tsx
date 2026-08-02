@@ -20,7 +20,7 @@ export const Route = createFileRoute("/how-to-sell")({
 
 const STEPS = [
   { t: "1. Fungua akaunti", d: "Jisajili kwa namba yako ya simu au barua pepe." },
-  { t: "2. Badilisha wasifu kuwa Seller", d: "Nenda My Alibaba kisha gusa 'Want to sell?'" },
+  { t: "2. Badilisha wasifu kuwa Seller", d: "Nenda Akaunti Yangu kisha gusa 'Want to sell?'" },
   { t: "3. Thibitisha KYC", d: "Pakia NIDA au leseni ya biashara na picha za banda lako." },
   { t: "4. Weka bidhaa", d: "Tumia kitufe cha '+' kuweka mifugo, mabanda au chakula na bei ya jumla (MOQ)." },
   { t: "5. Jibu maswali", d: "Wasiliana na wanunuzi kupitia Messenger na jibu RFQ haraka." },

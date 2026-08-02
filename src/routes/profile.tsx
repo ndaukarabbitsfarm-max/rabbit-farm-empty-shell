@@ -39,12 +39,12 @@ import { signedUrl } from "@/lib/storage";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "My Alibaba — Ndauka Farm Marketplace" },
+      { title: "Akaunti Yangu — Ndauka Farm Marketplace" },
       {
         name: "description",
         content: "Manage your buyer or seller profile, contact details and location on the marketplace.",
       },
-      { property: "og:title", content: "My Alibaba — Ndauka Farm Marketplace" },
+      { property: "og:title", content: "Akaunti Yangu — Ndauka Farm Marketplace" },
       { property: "og:description", content: "Manage your buyer or seller profile and contacts." },
     ],
   }),
@@ -96,7 +96,7 @@ function ProfilePage() {
 
   if (!user) {
     return (
-      <MobileShell title="My Alibaba">
+      <MobileShell title="Akaunti Yangu">
         <EmptyState
           icon={LogIn}
           title="You are not signed in"
@@ -160,7 +160,7 @@ function ProfilePage() {
       : null;
 
   return (
-    <MobileShell title="My Alibaba" subtitle={user.email ?? user.phone ?? undefined}>
+    <MobileShell title="Akaunti Yangu" subtitle={user.email ?? user.phone ?? undefined}>
       {/* Header: avatar + name + verification badge space */}
       <div className="brand-surface px-4 pb-6 pt-4">
         <div className="flex items-center gap-3">

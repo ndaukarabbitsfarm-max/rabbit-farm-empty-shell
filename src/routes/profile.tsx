@@ -201,7 +201,7 @@ function ProfilePage() {
               {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Camera className="h-3 w-3" />}
             </span>
           </button>
-          {isSellerRole ? (
+          {isSeller ? (
             <button
               type="button"
               onClick={() => setStoryOpen(true)}

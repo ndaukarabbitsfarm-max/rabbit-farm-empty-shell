@@ -34,6 +34,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
+import { Route as AdminOrdersRouteImport } from './routes/admin_.orders'
 import { Route as ListingIdEditRouteImport } from './routes/listing.$id.edit'
 
 const TipsRoute = TipsRouteImport.update({
@@ -161,6 +162,11 @@ const CategorySlugRoute = CategorySlugRouteImport.update({
   path: '/category/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminOrdersRoute = AdminOrdersRouteImport.update({
+  id: '/admin_/orders',
+  path: '/admin/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ListingIdEditRoute = ListingIdEditRouteImport.update({
   id: '/listing/$id/edit',
   path: '/listing/$id/edit',
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
+  '/admin/orders': typeof AdminOrdersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
+  '/admin_/orders': typeof AdminOrdersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/tips'
+    | '/admin/orders'
     | '/category/$slug'
     | '/messages/$id'
     | '/product/$id'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/tips'
+    | '/admin/orders'
     | '/category/$slug'
     | '/messages/$id'
     | '/product/$id'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/tips'
+    | '/admin_/orders'
     | '/category/$slug'
     | '/messages/$id'
     | '/product/$id'
@@ -362,6 +374,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TipsRoute: typeof TipsRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
   CategorySlugRoute: typeof CategorySlugRoute
   ProductIdRoute: typeof ProductIdRoute
   ListingIdEditRoute: typeof ListingIdEditRoute
@@ -544,6 +557,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/orders': {
+      id: '/admin_/orders'
+      path: '/admin/orders'
+      fullPath: '/admin/orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/listing/$id/edit': {
       id: '/listing/$id/edit'
       path: '/listing/$id/edit'
@@ -589,6 +609,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TipsRoute: TipsRoute,
+  AdminOrdersRoute: AdminOrdersRoute,
   CategorySlugRoute: CategorySlugRoute,
   ProductIdRoute: ProductIdRoute,
   ListingIdEditRoute: ListingIdEditRoute,

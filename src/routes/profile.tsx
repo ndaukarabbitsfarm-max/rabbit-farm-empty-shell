@@ -20,14 +20,17 @@ import {
   User as UserIcon,
   Camera,
   Store,
+  ClipboardCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProfileMenuRow } from "@/components/ProfileMenuRow";
 import { KycSection } from "@/components/KycSection";
+import { CreateMediaDialog } from "@/components/CreateMediaDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,12 +42,12 @@ import { signedUrl } from "@/lib/storage";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "My Alibaba — Ndauka Farm Marketplace" },
+      { title: "Akaunti Yangu — Ndauka Farm Marketplace" },
       {
         name: "description",
         content: "Manage your buyer or seller profile, contact details and location on the marketplace.",
       },
-      { property: "og:title", content: "My Alibaba — Ndauka Farm Marketplace" },
+      { property: "og:title", content: "Akaunti Yangu — Ndauka Farm Marketplace" },
       { property: "og:description", content: "Manage your buyer or seller profile and contacts." },
     ],
   }),
@@ -59,6 +62,9 @@ function ProfilePage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [storyOpen, setStoryOpen] = useState(false);
+  const [about, setAbout] = useState("");
+  const [savingAbout, setSavingAbout] = useState(false);
   const [form, setForm] = useState({ full_name: "", phone: "", whatsapp: "", region: "", city: "" });
 
   const { data: avatarUrl, refetch: refetchAvatar } = useQuery({
@@ -91,12 +97,13 @@ function ProfilePage() {
         region: profile.region ?? "",
         city: profile.city ?? "",
       });
+      setAbout(profile.about_text ?? "");
     }
   }, [profile]);
 
   if (!user) {
     return (
-      <MobileShell title="My Alibaba">
+      <MobileShell title="Akaunti Yangu">
         <EmptyState
           icon={LogIn}
           title="You are not signed in"
@@ -151,6 +158,21 @@ function ProfilePage() {
     }
   }
 
+  async function saveAbout(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingAbout(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ about_text: about })
+      .eq("id", user!.id);
+    setSavingAbout(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Maelezo yamehifadhiwa");
+      await refreshProfile();
+    }
+  }
+
   const isSeller = profile?.role === "seller";
   const verifiedBadge =
     kyc?.status === "approved"
@@ -160,7 +182,7 @@ function ProfilePage() {
       : null;
 
   return (
-    <MobileShell title="My Alibaba" subtitle={user.email ?? user.phone ?? undefined}>
+    <MobileShell title="Akaunti Yangu" subtitle={user.email ?? user.phone ?? undefined}>
       {/* Header: avatar + name + verification badge space */}
       <div className="brand-surface px-4 pb-6 pt-4">
         <div className="flex items-center gap-3">
@@ -179,6 +201,16 @@ function ProfilePage() {
               {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Camera className="h-3 w-3" />}
             </span>
           </button>
+          {isSeller ? (
+            <button
+              type="button"
+              onClick={() => setStoryOpen(true)}
+              aria-label="Anza Story"
+              className="-ml-4 mt-8 flex h-6 w-6 items-center justify-center self-start rounded-full bg-primary-foreground text-xs font-bold text-primary"
+            >
+              +
+            </button>
+          ) : null}
           <input
             ref={fileRef}
             type="file"
@@ -263,7 +295,38 @@ function ProfilePage() {
                 </Link>
               </Button>
             ) : null}
+            {isAdmin ? (
+              <Button asChild variant="outline" className="h-11 justify-start rounded-xl">
+                <Link to="/admin/orders">
+                  <ClipboardCheck className="mr-2 h-4 w-4" /> Admin orders
+                </Link>
+              </Button>
+            ) : null}
           </div>
+
+          <form onSubmit={saveAbout} className="surface-card space-y-3 p-4">
+            <h3 className="text-sm font-semibold">
+              {isSeller ? "Kuhusu Shamba" : "Kuhusu mimi"}
+            </h3>
+            <Textarea
+              rows={5}
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+              aria-label={isSeller ? "Maelezo ya shamba" : "Maelezo yako"}
+              placeholder={
+                isSeller
+                  ? "Eleza shamba lako: unafuga nini, uzoefu wa miaka mingapi, mahali ulipo…"
+                  : "Maelezo mafupi kukuhusu…"
+              }
+              className="rounded-xl"
+            />
+            <p className="text-[11px] text-muted-foreground">
+              {isSeller ? "Maelezo haya yataonekana kwa wanunuzi kwenye ukurasa wako." : "Yataonekana kwenye wasifu wako."}
+            </p>
+            <Button type="submit" className="h-11 w-full rounded-xl" disabled={savingAbout}>
+              {savingAbout ? <Loader2 className="h-4 w-4 animate-spin" /> : "Hifadhi maelezo"}
+            </Button>
+          </form>
 
           <KycSection />
 
@@ -305,6 +368,7 @@ function ProfilePage() {
         </Button>
         </div>
       </div>
+      <CreateMediaDialog kind="story" open={storyOpen} onOpenChange={setStoryOpen} />
     </MobileShell>
   );
 }

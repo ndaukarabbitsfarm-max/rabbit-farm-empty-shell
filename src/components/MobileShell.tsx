@@ -1,18 +1,31 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Home, GraduationCap, MessageCircle, ShoppingCart, User, Bell, Plus } from "lucide-react";
+import {
+  Home,
+  GraduationCap,
+  MessageCircle,
+  ShoppingCart,
+  User,
+  Bell,
+  Plus,
+  Package,
+  Film,
+  Camera,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/cart";
 import { useNotifications } from "@/lib/notifications";
 import { useAuth } from "@/hooks/useAuth";
+import { CreateMediaDialog, type MediaKind } from "@/components/CreateMediaDialog";
 
 const TABS = [
   { to: "/", label: "Home", icon: Home },
   { to: "/tips", label: "Tips", icon: GraduationCap },
   { to: "/messages", label: "Messenger", icon: MessageCircle },
   { to: "/cart", label: "Cart", icon: ShoppingCart },
-  { to: "/profile", label: "My Alibaba", icon: User },
+  { to: "/profile", label: "Akaunti Yangu", icon: User },
 ] as const;
 
 export const TOP_TABS = [
@@ -86,6 +99,8 @@ export function PostItemFab() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [open, setOpen] = useState(false);
+  const [dialog, setDialog] = useState<MediaKind | null>(null);
 
   if (pathname.startsWith("/post") || pathname.startsWith("/auth")) return null;
 
@@ -102,18 +117,58 @@ export function PostItemFab() {
       });
       return;
     }
-    navigate({ to: "/post" });
+    setOpen((v) => !v);
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      aria-label="Weka bidhaa mpya"
-      className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform active:scale-95"
-    >
-      <Plus className="h-7 w-7" strokeWidth={2.6} />
-    </button>
+    <>
+      {open ? (
+        <button
+          type="button"
+          aria-label="Funga menyu"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-40 bg-black/30"
+        />
+      ) : null}
+      {open ? (
+        <div className="fixed bottom-36 right-4 z-40 w-44 overflow-hidden rounded-2xl bg-card shadow-lg">
+          {(
+            [
+              { key: "post", label: "Post — Bidhaa", icon: Package },
+              { key: "reel", label: "Reel — Video", icon: Film },
+              { key: "story", label: "Story — Saa 24", icon: Camera },
+            ] as const
+          ).map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                if (key === "post") navigate({ to: "/post" });
+                else setDialog(key);
+              }}
+              className="flex w-full items-center gap-2.5 border-b border-border/70 px-3 py-3 text-left text-sm font-medium last:border-b-0 active:bg-muted/60"
+            >
+              <Icon className="h-4 w-4 text-primary" />
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+      <button
+        type="button"
+        onClick={handleClick}
+        aria-label={open ? "Funga menyu ya kuweka" : "Weka bidhaa, reel au story"}
+        className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform active:scale-95"
+      >
+        {open ? <X className="h-7 w-7" strokeWidth={2.6} /> : <Plus className="h-7 w-7" strokeWidth={2.6} />}
+      </button>
+      <CreateMediaDialog
+        kind={dialog}
+        open={dialog !== null}
+        onOpenChange={(v) => (v ? null : setDialog(null))}
+      />
+    </>
   );
 }
 

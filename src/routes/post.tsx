@@ -4,6 +4,7 @@ import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { ListingForm } from "@/components/ListingForm";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/post")({
@@ -55,7 +56,9 @@ function PostPage() {
 
   return (
     <MobileShell title="Post Item" subtitle="Weka bidhaa yako sokoni">
-      <ListingForm />
+      <ErrorBoundary label="post-item">
+        <ListingForm />
+      </ErrorBoundary>
     </MobileShell>
   );
 }

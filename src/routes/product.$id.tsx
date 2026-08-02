@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { MobileShell, CartButton } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
+import { ProductComments } from "@/components/ProductComments";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -262,41 +263,6 @@ function ProductDetailPage() {
           ) : null}
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            className="h-11 rounded-xl"
-            onClick={() => {
-              add(
-                {
-                  productId: product.id,
-                  sellerId: product.seller_id,
-                  title: product.title,
-                  priceTzs: Number(product.price_tzs),
-                  mediaPath: product.media_urls?.[0] ?? null,
-                },
-                Number(qty) || 1,
-              );
-              toast.success("Added to cart");
-            }}
-          >
-            <ShoppingCart className="mr-1.5 h-4 w-4" /> Add to cart
-          </Button>
-          <Button
-            variant="outline"
-            className="h-11 rounded-xl"
-            onClick={messageSeller}
-            disabled={startingChat}
-          >
-            {startingChat ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <MessageSquare className="mr-1.5 h-4 w-4" /> Message seller
-              </>
-            )}
-          </Button>
-        </div>
-
         {user ? (
           <div className="grid grid-cols-2 gap-2">
             <Button asChild variant="outline" className="h-11 rounded-xl" disabled={!contactPhone}>
@@ -355,8 +321,58 @@ function ProductDetailPage() {
             <Row label="Estimated transport" value={formatTZS(transportCost)} />
             <Row label="Total" value={formatTZS(total)} strong />
           </dl>
-          <Button onClick={requestOrder} className="h-12 w-full rounded-xl" disabled={submitting}>
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Request Order"}
+        </div>
+
+        <ProductComments productId={product.id} />
+
+        {/* Spacer so the sticky action bar never covers content */}
+        <div className="h-24" />
+      </div>
+
+      {/* Sticky action bar, sits above the bottom navigation */}
+      <div className="fixed inset-x-0 bottom-[62px] z-40 mx-auto w-full max-w-[30rem] border-t border-border bg-card/95 p-2 backdrop-blur">
+        <div className="grid grid-cols-3 gap-2">
+          <Button
+            variant="outline"
+            className="h-11 flex-col gap-0 rounded-xl px-1 text-[11px] font-semibold leading-tight"
+            onClick={messageSeller}
+            disabled={startingChat}
+          >
+            {startingChat ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <MessageSquare className="h-4 w-4" />
+                Piga gumzo sasa
+              </>
+            )}
+          </Button>
+          <Button
+            variant="outline"
+            className="h-11 flex-col gap-0 rounded-xl px-1 text-[11px] font-semibold leading-tight"
+            onClick={() => {
+              add(
+                {
+                  productId: product.id,
+                  sellerId: product.seller_id,
+                  title: product.title,
+                  priceTzs: Number(product.price_tzs),
+                  mediaPath: product.media_urls?.[0] ?? null,
+                },
+                Number(qty) || 1,
+              );
+              toast.success("Imeongezwa kwenye kikapu");
+            }}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            Ongeza kwenye Kikapu
+          </Button>
+          <Button
+            className="h-11 flex-col gap-0 rounded-xl px-1 text-[11px] font-semibold leading-tight"
+            onClick={requestOrder}
+            disabled={submitting}
+          >
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Anza Agizo</>}
           </Button>
         </div>
       </div>

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { CATEGORIES, isVideoPath, resolveMediaUrls } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
+import { safeFileName } from "@/lib/storage";
 import { useAuth } from "@/hooks/useAuth";
 
 function safeId() {
@@ -131,9 +132,10 @@ export function ListingForm({ productId }: { productId?: string }) {
     try {
       const paths = [...existingPaths];
       for (const file of files) {
-        const ext = file.name.split(".").pop() ?? "bin";
-        const path = `${user.id}/${safeId()}.${ext}`;
-        const { error } = await supabase.storage.from("listings").upload(path, file);
+        const path = `${user.id}/${safeId()}-${safeFileName(file.name)}`;
+        const { error } = await supabase.storage
+          .from("listings")
+          .upload(path, file, { contentType: file.type || undefined });
         if (error) throw error;
         paths.push(path);
       }

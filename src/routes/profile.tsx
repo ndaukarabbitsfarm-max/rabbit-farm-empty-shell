@@ -37,7 +37,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { usePrefs } from "@/lib/prefs";
 import { useUnreadMessages } from "@/lib/unread";
-import { signedUrl } from "@/lib/storage";
+import { safeFileName, signedUrl } from "@/lib/storage";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -132,8 +132,10 @@ function ProfilePage() {
 
   async function uploadAvatar(file: File) {
     setUploading(true);
-    const path = `${user!.id}/avatar-${Date.now()}-${file.name}`;
-    const up = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    const path = `${user!.id}/avatar-${Date.now()}-${safeFileName(file.name)}`;
+    const up = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true, contentType: file.type || undefined });
     if (up.error) {
       setUploading(false);
       toast.error(up.error.message);

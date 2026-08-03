@@ -4,6 +4,21 @@ import { supabase } from "@/integrations/supabase/client";
 const PUBLIC_BUCKETS = new Set(["listings", "avatars"]);
 
 /**
+ * Storage keys only accept a safe subset of characters — phone galleries often
+ * produce names with spaces or non-latin characters, which made uploads fail.
+ */
+export function safeFileName(name: string) {
+  const dot = name.lastIndexOf(".");
+  const ext = dot > 0 ? name.slice(dot + 1).toLowerCase().replace(/[^a-z0-9]/g, "") : "";
+  const base = (dot > 0 ? name.slice(0, dot) : name)
+    .normalize("NFKD")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+  return `${base || "file"}${ext ? `.${ext}` : ""}`;
+}
+
+/**
  * Returns a displayable URL for a stored object. Public buckets use the CDN URL,
  * private buckets (KYC documents) fall back to a short-lived signed URL.
  */

@@ -215,11 +215,11 @@ function ProfilePage() {
             ref={fileRef}
             type="file"
             accept="image/*"
-            capture="environment"
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) void uploadAvatar(f);
+              e.target.value = "";
             }}
           />
           <div className="min-w-0 flex-1">

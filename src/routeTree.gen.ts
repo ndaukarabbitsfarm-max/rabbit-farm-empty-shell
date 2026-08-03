@@ -14,7 +14,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as RfqRouteImport } from './routes/rfq'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as OrdersRouteImport } from './routes/orders'
@@ -60,11 +59,6 @@ const SellersRoute = SellersRouteImport.update({
 const RfqRoute = RfqRouteImport.update({
   id: '/rfq',
   path: '/rfq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -190,7 +184,6 @@ export interface FileRoutesByFullPath {
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/settings': typeof SettingsRoute
@@ -219,7 +212,6 @@ export interface FileRoutesByTo {
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/settings': typeof SettingsRoute
@@ -249,7 +241,6 @@ export interface FileRoutesById {
   '/orders': typeof OrdersRoute
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
-  '/profile': typeof ProfileRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/settings': typeof SettingsRoute
@@ -280,7 +271,6 @@ export interface FileRouteTypes {
     | '/orders'
     | '/post'
     | '/privacy'
-    | '/profile'
     | '/rfq'
     | '/sellers'
     | '/settings'
@@ -309,7 +299,6 @@ export interface FileRouteTypes {
     | '/orders'
     | '/post'
     | '/privacy'
-    | '/profile'
     | '/rfq'
     | '/sellers'
     | '/settings'
@@ -338,7 +327,6 @@ export interface FileRouteTypes {
     | '/orders'
     | '/post'
     | '/privacy'
-    | '/profile'
     | '/rfq'
     | '/sellers'
     | '/settings'
@@ -368,7 +356,6 @@ export interface RootRouteChildren {
   OrdersRoute: typeof OrdersRoute
   PostRoute: typeof PostRoute
   PrivacyRoute: typeof PrivacyRoute
-  ProfileRoute: typeof ProfileRoute
   RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
   SettingsRoute: typeof SettingsRoute
@@ -415,13 +402,6 @@ declare module '@tanstack/react-router' {
       path: '/rfq'
       fullPath: '/rfq'
       preLoaderRoute: typeof RfqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -603,7 +583,6 @@ const rootRouteChildren: RootRouteChildren = {
   OrdersRoute: OrdersRoute,
   PostRoute: PostRoute,
   PrivacyRoute: PrivacyRoute,
-  ProfileRoute: ProfileRoute,
   RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,
   SettingsRoute: SettingsRoute,
@@ -617,3 +596,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -1,0 +1,1 @@
+GRANT SELECT (id, seller_id, title, category_slug, breed, quantity, moq, price_tzs, description, region, city, media_urls, status, pedigree_verified, vaccination_records, created_at, updated_at) ON public.products TO anon;

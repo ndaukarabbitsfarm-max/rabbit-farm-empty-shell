@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { safeFileName } from "@/lib/storage";
 import { useAuth } from "@/hooks/useAuth";
 
 export type MediaKind = "reel" | "story";
@@ -70,8 +71,10 @@ export function CreateMediaDialog({
     }
     setBusy(true);
     try {
-      const path = `${user.id}/${kind}-${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-      const up = await supabase.storage.from("listings").upload(path, file);
+      const path = `${user.id}/${kind}-${Date.now()}-${safeFileName(file.name)}`;
+      const up = await supabase.storage
+        .from("listings")
+        .upload(path, file, { contentType: file.type || undefined });
       if (up.error) throw up.error;
 
       if (kind === "reel") {

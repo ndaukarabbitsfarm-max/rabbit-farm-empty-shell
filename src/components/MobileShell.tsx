@@ -218,12 +218,14 @@ export function MobileShell({
   subtitle,
   right,
   hideNav,
+  hideFab,
 }: {
   children: ReactNode;
   title?: string;
   subtitle?: string;
   right?: ReactNode;
   hideNav?: boolean;
+  hideFab?: boolean;
 }) {
   return (
     <div className="app-shell relative flex flex-col">
@@ -243,7 +245,7 @@ export function MobileShell({
       <main className={cn("flex-1", hideNav ? "pb-8" : "safe-bottom")}>{children}</main>
       {hideNav ? null : (
         <>
-          <PostItemFab />
+          {hideFab ? null : <PostItemFab />}
           <BottomNav />
         </>
       )}

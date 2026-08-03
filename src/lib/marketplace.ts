@@ -27,11 +27,19 @@ export function formatTZS(value: number | string | null | undefined) {
   return `TZS ${n.toLocaleString("en-TZ", { maximumFractionDigits: 0 })}`;
 }
 
-/** Media is stored as object paths in the private `listings` bucket. */
+/**
+ * Media is stored as object paths in the public `listings` bucket. Full https
+ * URLs (legacy rows) are passed through untouched so nothing renders broken.
+ */
+export function mediaUrl(path: string): string {
+  if (/^https?:\/\//i.test(path)) return path;
+  return supabase.storage.from("listings").getPublicUrl(path).data.publicUrl;
+}
+
+/** Resolves in order — the returned array always matches `paths` index-for-index. */
 export async function resolveMediaUrls(paths: string[]): Promise<string[]> {
   if (!paths.length) return [];
-  const { data } = await supabase.storage.from("listings").createSignedUrls(paths, 3600);
-  return (data ?? []).map((d) => d.signedUrl).filter((u): u is string => Boolean(u));
+  return paths.map(mediaUrl);
 }
 
 export function isVideoPath(path: string) {

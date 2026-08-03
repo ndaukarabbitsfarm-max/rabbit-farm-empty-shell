@@ -1,36 +1,54 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ImageOff, BadgeCheck, MapPin } from "lucide-react";
-import { formatTZS, resolveMediaUrls } from "@/lib/marketplace";
+import { ImageOff, BadgeCheck, MapPin, Play } from "lucide-react";
+import { formatTZS, isVideoPath, mediaUrl } from "@/lib/marketplace";
 import type { PublicProduct } from "@/lib/marketplace";
 import { cn } from "@/lib/utils";
 
 export function useCover(mediaUrls: string[] | null | undefined) {
-  const [cover, setCover] = useState<string | null>(null);
+  const [cover, setCover] = useState<{ src: string; video: boolean } | null>(null);
   useEffect(() => {
-    let active = true;
     const first = mediaUrls?.[0];
-    if (!first) return;
-    resolveMediaUrls([first]).then((urls) => {
-      if (active) setCover(urls[0] ?? null);
-    });
-    return () => {
-      active = false;
-    };
+    if (!first) {
+      setCover(null);
+      return;
+    }
+    setCover({ src: mediaUrl(first), video: isVideoPath(first) });
   }, [mediaUrls]);
   return cover;
 }
 
-function Cover({ src, alt, className }: { src: string | null; alt: string; className?: string }) {
+export function Cover({
+  src,
+  alt,
+  className,
+}: {
+  src: { src: string; video: boolean } | null;
+  alt: string;
+  className?: string;
+}) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center overflow-hidden bg-muted text-muted-foreground",
+        "relative flex items-center justify-center overflow-hidden bg-muted text-muted-foreground",
         className,
       )}
     >
-      {src ? (
-        <img src={src} alt={alt} loading="lazy" className="h-full w-full object-cover" />
+      {src?.video ? (
+        <>
+          <video
+            src={src.src}
+            muted
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover"
+          />
+          <span className="absolute inset-0 flex items-center justify-center">
+            <Play className="h-6 w-6 fill-background/70 text-background/90" />
+          </span>
+        </>
+      ) : src ? (
+        <img src={src.src} alt={alt} loading="lazy" className="h-full w-full object-cover" />
       ) : (
         <ImageOff className="h-5 w-5" />
       )}

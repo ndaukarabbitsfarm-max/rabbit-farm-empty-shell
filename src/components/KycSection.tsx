@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { safeFileName } from "@/lib/storage";
 import { useAuth } from "@/hooks/useAuth";
 
 const STATUS_LABEL = {
@@ -47,14 +48,18 @@ export function KycSection() {
     setBusy(true);
     try {
       const base = `${user.id}/${Date.now()}`;
-      const idPath = `${base}-id-${idFile.name}`;
-      const up = await supabase.storage.from("kyc-documents").upload(idPath, idFile);
+      const idPath = `${base}-id-${safeFileName(idFile.name)}`;
+      const up = await supabase.storage
+        .from("kyc-documents")
+        .upload(idPath, idFile, { contentType: idFile.type || undefined });
       if (up.error) throw up.error;
 
       const photoPaths: string[] = [];
       for (const file of Array.from(photos ?? [])) {
-        const p = `${base}-farm-${file.name}`;
-        const r = await supabase.storage.from("kyc-documents").upload(p, file);
+        const p = `${base}-farm-${safeFileName(file.name)}`;
+        const r = await supabase.storage
+          .from("kyc-documents")
+          .upload(p, file, { contentType: file.type || undefined });
         if (r.error) throw r.error;
         photoPaths.push(p);
       }

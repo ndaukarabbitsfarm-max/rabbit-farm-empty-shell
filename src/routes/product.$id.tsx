@@ -208,6 +208,7 @@ function ProductDetailPage() {
   return (
     <MobileShell
       title={product.title}
+      hideFab
       right={
         <div className="flex items-center gap-1.5">
           <CartButton />

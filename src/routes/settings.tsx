@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MobileShell } from "@/components/MobileShell";
-import { usePrefs } from "@/lib/prefs";
+import { LANGUAGES, usePrefs } from "@/lib/prefs";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -15,29 +15,31 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
-  const { lang, setLang, currency, setCurrency } = usePrefs();
+  const { lang, setLang, currency, setCurrency, t } = usePrefs();
   return (
     <MobileShell title="Settings" subtitle="Lugha na sarafu">
       <div className="space-y-4 p-4">
         <section className="surface-card p-4">
-          <h2 className="text-sm font-semibold">Lugha / Language</h2>
-          <div className="flex gap-2 pt-2">
-            {(["sw", "en"] as const).map((l) => (
+          <h2 className="text-sm font-semibold">{t("language")}</h2>
+          <div className="flex flex-wrap gap-2 pt-2">
+            {LANGUAGES.map((l) => (
               <button
-                key={l}
+                key={l.code}
                 type="button"
-                onClick={() => setLang(l)}
+                onClick={() => setLang(l.code)}
                 className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                  lang === l ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"
+                  lang === l.code
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border text-muted-foreground"
                 }`}
               >
-                {l === "sw" ? "Kiswahili" : "English"}
+                {l.native}
               </button>
             ))}
           </div>
         </section>
         <section className="surface-card p-4">
-          <h2 className="text-sm font-semibold">Sarafu / Currency</h2>
+          <h2 className="text-sm font-semibold">{t("currency")}</h2>
           <div className="flex flex-wrap gap-2 pt-2">
             {(["TZS", "KES", "UGX", "USD"] as const).map((c) => (
               <button

@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { formatTZS } from "@/lib/marketplace";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyUser } from "@/lib/push-client";
 import { useAuth } from "@/hooks/useAuth";
 import type { Enums } from "@/integrations/supabase/types";
 
@@ -105,12 +106,26 @@ function OrdersPage() {
     },
   });
 
-  async function updateStatus(orderId: string, status: Enums<"order_status">) {
+  async function updateStatus(
+    orderId: string,
+    status: Enums<"order_status">,
+    buyerId?: string | null,
+  ) {
     const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
     if (error) {
       toast.error(error.message);
       return;
     }
+    notifyUser({
+      userId: buyerId,
+      kind: "order",
+      title: status === "accepted" ? "Oda yako imekubaliwa" : `Oda yako: ${status}`,
+      body:
+        status === "accepted"
+          ? "Muuzaji amekubali oda yako. Angalia njia za malipo."
+          : "Hali ya oda yako imebadilika.",
+      link: "/orders",
+    });
     toast.success("Order updated");
     await queryClient.invalidateQueries({ queryKey: ["orders", user?.id] });
   }
@@ -180,7 +195,7 @@ function OrdersPage() {
                       name: o.buyer_name ?? buyer?.full_name ?? null,
                       phone: o.buyer_phone ?? buyer?.phone ?? null,
                     }}
-                    onStatusChange={(s) => updateStatus(o.id, s)}
+                    onStatusChange={(s) => updateStatus(o.id, s, o.buyer_id)}
                   />
                 );
               })

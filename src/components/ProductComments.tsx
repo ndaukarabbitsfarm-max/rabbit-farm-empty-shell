@@ -7,9 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { notifyUser } from "@/lib/push-client";
 
 /** Public Q&A thread under a listing (product_comments table). */
-export function ProductComments({ productId }: { productId: string }) {
+export function ProductComments({
+  productId,
+  sellerId,
+  productTitle,
+}: {
+  productId: string;
+  sellerId?: string | null;
+  productTitle?: string | null;
+}) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [text, setText] = useState("");
@@ -47,6 +56,13 @@ export function ProductComments({ productId }: { productId: string }) {
       toast.error(error.message);
       return;
     }
+    notifyUser({
+      userId: sellerId,
+      kind: "comment",
+      title: "Swali jipya kwenye bidhaa yako",
+      body: `${productTitle ?? "Bidhaa yako"}: ${text.trim().slice(0, 100)}`,
+      link: `/product/${productId}`,
+    });
     setText("");
     await qc.invalidateQueries({ queryKey: ["product-comments", productId] });
   }

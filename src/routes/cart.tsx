@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { formatTZS } from "@/lib/marketplace";
 import { useCart } from "@/lib/cart";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyUser } from "@/lib/push-client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/cart")({
@@ -113,6 +114,14 @@ function CartPage() {
           })),
         );
         if (itemsError) throw itemsError;
+
+        notifyUser({
+          userId: sellerId,
+          kind: "order",
+          title: "Oda mpya imepokelewa",
+          body: `Oda ya TZS ${Math.round(sellerSubtotal + share).toLocaleString("en-US")} inasubiri kukubaliwa.`,
+          link: "/orders",
+        });
       }
 
       if (sellers.length === sellerIds.length) clear();

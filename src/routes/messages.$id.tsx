@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { notifyUser } from "@/lib/push-client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/messages/$id")({
@@ -94,6 +95,15 @@ function ConversationPage() {
         .from("conversations")
         .update({ last_message_at: new Date().toISOString() })
         .eq("id", id);
+      const other =
+        conversation?.buyer_id === user.id ? conversation?.seller_id : conversation?.buyer_id;
+      notifyUser({
+        userId: other,
+        kind: "chat",
+        title: "Ujumbe mpya Messenger",
+        body: body.trim().slice(0, 120),
+        link: `/messages/${id}`,
+      });
       setBody("");
       await queryClient.invalidateQueries({ queryKey: ["messages", id] });
     } catch (err) {

@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProfileMenuRow } from "@/components/ProfileMenuRow";
+import { PushToggle } from "@/components/PushToggle";
 import { KycSection } from "@/components/KycSection";
 import { CreateMediaDialog } from "@/components/CreateMediaDialog";
 import { Button } from "@/components/ui/button";
@@ -251,6 +252,7 @@ function ProfilePage() {
       <div className="space-y-4 px-0 pt-3">
         {/* Primary menu */}
         <nav className="mx-3 overflow-hidden rounded-2xl bg-card shadow-sm">
+          <PushToggle />
           <ProfileMenuRow to="/orders" icon={ClipboardList} label={t("manageOrders")} />
           <ProfileMenuRow to="/messages" icon={MessageCircle} label={t("messenger")} dot={unread > 0} />
           <ProfileMenuRow to="/cart" icon={ShoppingCart} label={t("shoppingCart")} />

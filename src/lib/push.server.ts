@@ -35,7 +35,7 @@ export async function sendPushToUser(userId: string, payload: PushPayload) {
           subscription,
           keys,
         );
-        const res = await fetch(subscription.endpoint, request);
+        const res = await fetch(subscription.endpoint, request as unknown as RequestInit);
         if (res.status === 404 || res.status === 410) {
           await supabaseAdmin.from("push_subscriptions").delete().eq("id", row.id);
         } else if (res.ok) {

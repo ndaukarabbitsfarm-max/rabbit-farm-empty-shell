@@ -23,6 +23,7 @@ export default defineConfig({
         manifest: false,
         devOptions: { enabled: false },
         workbox: {
+          importScripts: ["/push-sw.js"],
           globPatterns: ["**/*.{js,css,ico,png,svg,woff2}"],
           navigateFallback: null,
           navigateFallbackDenylist: [/^\/~oauth/, /^\/api\//],

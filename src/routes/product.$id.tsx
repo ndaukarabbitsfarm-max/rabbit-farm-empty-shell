@@ -324,7 +324,11 @@ function ProductDetailPage() {
           </dl>
         </div>
 
-        <ProductComments productId={product.id} />
+        <ProductComments
+          productId={product.id}
+          sellerId={product.seller_id}
+          productTitle={product.title}
+        />
 
         {/* Spacer so the sticky action bar never covers content */}
         <div className="h-24" />

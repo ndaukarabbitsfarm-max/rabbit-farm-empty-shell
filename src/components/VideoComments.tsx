@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { notifyUser } from "@/lib/push-client";
 
 /** Bottom-sheet comment panel for a Reel. The video keeps playing behind it. */
 export function VideoComments({ videoId, onClose }: { videoId: string; onClose: () => void }) {
@@ -44,6 +45,18 @@ export function VideoComments({ videoId, onClose }: { videoId: string; onClose: 
       toast.error(error.message);
       return;
     }
+    const { data: post } = await supabase
+      .from("video_posts")
+      .select("seller_id")
+      .eq("id", videoId)
+      .maybeSingle();
+    notifyUser({
+      userId: post?.seller_id,
+      kind: "comment",
+      title: "Maoni mapya kwenye Reel yako",
+      body: text.trim().slice(0, 120),
+      link: "/tips",
+    });
     setText("");
     await qc.invalidateQueries({ queryKey: ["video-comments", videoId] });
   }

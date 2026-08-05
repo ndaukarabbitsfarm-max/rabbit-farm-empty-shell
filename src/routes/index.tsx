@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { MobileShell, CartButton, NotificationBell, TopTabs } from "@/components/MobileShell";
 import { AnimatedSearchBar } from "@/components/AnimatedSearchBar";
+import { AiAssistantSheet, AiModeButton } from "@/components/AiAssistant";
 import { StoriesBar } from "@/components/StoriesBar";
 import { EmptyState } from "@/components/EmptyState";
 import { DealCard, ProductTile, ProductMiniCard } from "@/components/CompactProductCard";
@@ -84,6 +85,7 @@ function SectionHeader({ title, to }: { title: string; to?: string }) {
 function HomePage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
+  const [aiOpen, setAiOpen] = useState(false);
 
   const { data: products, isLoading } = useQuery({
     queryKey: ["feed", search, category],
@@ -142,8 +144,13 @@ function HomePage() {
           <TopTabs active="/" />
         </div>
 
-        <AnimatedSearchBar value={search} onChange={setSearch} className="mt-3" />
+        <div className="mt-3 flex items-center gap-2">
+          <AnimatedSearchBar value={search} onChange={setSearch} className="flex-1" />
+          <AiModeButton onClick={() => setAiOpen(true)} />
+        </div>
       </div>
+
+      {aiOpen ? <AiAssistantSheet onClose={() => setAiOpen(false)} /> : null}
 
       <div className="-mt-3 rounded-t-2xl bg-muted/40 pb-4">
         {/* Stories from sellers (active 24h) */}

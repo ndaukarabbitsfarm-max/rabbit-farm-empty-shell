@@ -4,7 +4,7 @@ import { Loader2, Sparkles, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { askAssistant } from "@/lib/ai.functions";
-import { formatTzs } from "@/lib/marketplace";
+import { formatTZS } from "@/lib/marketplace";
 
 type AssistantProduct = {
   id: string;
@@ -111,7 +111,7 @@ export function AiAssistantSheet({ onClose }: { onClose: () => void }) {
                             </span>
                           </span>
                           <span className="shrink-0 text-xs font-bold text-primary">
-                            {p.price_tzs != null ? formatTzs(p.price_tzs) : "—"}
+                            {p.price_tzs != null ? formatTZS(p.price_tzs) : "—"}
                           </span>
                         </Link>
                       </li>

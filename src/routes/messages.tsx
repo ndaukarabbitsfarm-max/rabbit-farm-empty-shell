@@ -9,8 +9,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export const Route = createFileRoute("/messages")({
+function formatWhen(iso: string | null | undefined) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const sameDay = new Date().toDateString() === d.toDateString();
+  return sameDay
+    ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : d.toLocaleDateString();
+}
 
+export const Route = createFileRoute("/messages")({
   head: () => ({
     meta: [
       { title: "Messages — Ndauka Rabbits Farm Marketplace" },

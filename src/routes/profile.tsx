@@ -306,6 +306,13 @@ function ProfilePage() {
                 </Link>
               </Button>
             ) : null}
+            {isAdmin ? (
+              <Button asChild variant="outline" className="h-11 justify-start rounded-xl">
+                <Link to="/admin/kyc">
+                  <ShieldCheck className="mr-2 h-4 w-4" /> KYC Review (Admin)
+                </Link>
+              </Button>
+            ) : null}
           </div>
 
           <form onSubmit={saveAbout} className="surface-card space-y-3 p-4">

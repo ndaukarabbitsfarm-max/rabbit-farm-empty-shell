@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/messages")({
+
   head: () => ({
     meta: [
       { title: "Messages — Ndauka Rabbits Farm Marketplace" },

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, LogIn, Send } from "lucide-react";
+import { ArrowLeft, Loader2, LogIn, Send, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
@@ -144,6 +144,16 @@ function ConversationPage() {
       }
     >
       <div className="flex flex-col gap-2 px-4 pt-4 pb-28">
+        {conversation?.product_id ? (
+          <div className="surface-card mb-2 flex items-center justify-between gap-3 p-3">
+            <p className="line-clamp-1 text-xs font-medium">{title}</p>
+            <Button asChild size="sm" className="h-9 shrink-0 rounded-xl">
+              <Link to="/product/$id" params={{ id: conversation.product_id }}>
+                <ShoppingBag className="mr-1.5 h-4 w-4" /> Weka Order
+              </Link>
+            </Button>
+          </div>
+        ) : null}
         {messages && messages.length > 0 ? (
           messages.map((m) => {
             const mine = m.sender_id === user.id;

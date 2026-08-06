@@ -223,12 +223,3 @@ function AdminKycPage() {
     </MobileShell>
   );
 }
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/admin_/kyc')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return <div>Hello "/admin_/kyc"!</div>
-}

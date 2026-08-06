@@ -144,7 +144,13 @@ function AdminKycPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  if (loading) return <MobileShell title="KYC Review" />;
+  if (loading) {
+    return (
+      <MobileShell title="KYC Review">
+        <div className="px-4 pt-4 text-sm text-muted-foreground">Inapakia…</div>
+      </MobileShell>
+    );
+  }
 
   if (!isAdmin) {
     return (

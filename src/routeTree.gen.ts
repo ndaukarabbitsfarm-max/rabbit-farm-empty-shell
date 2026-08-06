@@ -35,6 +35,7 @@ import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MessagesIdRouteImport } from './routes/messages.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as AdminOrdersRouteImport } from './routes/admin_.orders'
+import { Route as AdminKycRouteImport } from './routes/admin_.kyc'
 import { Route as ListingIdEditRouteImport } from './routes/listing.$id.edit'
 
 const TipsRoute = TipsRouteImport.update({
@@ -167,6 +168,11 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/admin/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminKycRoute = AdminKycRouteImport.update({
+  id: '/admin_/kyc',
+  path: '/admin/kyc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ListingIdEditRoute = ListingIdEditRouteImport.update({
   id: '/listing/$id/edit',
   path: '/listing/$id/edit',
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
+  '/admin/kyc': typeof AdminKycRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
+  '/admin/kyc': typeof AdminKycRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
@@ -255,6 +263,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tips': typeof TipsRoute
+  '/admin_/kyc': typeof AdminKycRoute
   '/admin_/orders': typeof AdminOrdersRoute
   '/category/$slug': typeof CategorySlugRoute
   '/messages/$id': typeof MessagesIdRoute
@@ -286,6 +295,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/tips'
+    | '/admin/kyc'
     | '/admin/orders'
     | '/category/$slug'
     | '/messages/$id'
@@ -315,6 +325,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/tips'
+    | '/admin/kyc'
     | '/admin/orders'
     | '/category/$slug'
     | '/messages/$id'
@@ -344,6 +355,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/sitemap.xml'
     | '/tips'
+    | '/admin_/kyc'
     | '/admin_/orders'
     | '/category/$slug'
     | '/messages/$id'
@@ -374,6 +386,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TipsRoute: typeof TipsRoute
+  AdminKycRoute: typeof AdminKycRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   CategorySlugRoute: typeof CategorySlugRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -564,6 +577,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/kyc': {
+      id: '/admin_/kyc'
+      path: '/admin/kyc'
+      fullPath: '/admin/kyc'
+      preLoaderRoute: typeof AdminKycRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/listing/$id/edit': {
       id: '/listing/$id/edit'
       path: '/listing/$id/edit'
@@ -609,6 +629,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TipsRoute: TipsRoute,
+  AdminKycRoute: AdminKycRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   CategorySlugRoute: CategorySlugRoute,
   ProductIdRoute: ProductIdRoute,
@@ -617,13 +638,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

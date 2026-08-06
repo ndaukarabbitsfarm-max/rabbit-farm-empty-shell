@@ -90,13 +90,20 @@ function MessagesPage() {
                 <h3 className="line-clamp-1 text-sm font-semibold">
                   {(c.products as { title: string } | null)?.title ?? "Direct conversation"}
                 </h3>
-                <Badge variant="secondary" className="text-[10px]">
+                <span className="shrink-0 text-[10px] text-muted-foreground">
+                  {formatWhen(c.preview?.created_at ?? c.last_message_at)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2 pt-1">
+                <p className="line-clamp-1 text-xs text-muted-foreground">
+                  {c.preview
+                    ? `${c.preview.sender_id === user.id ? "Wewe: " : ""}${c.preview.body}`
+                    : "Hakuna ujumbe bado"}
+                </p>
+                <Badge variant="secondary" className="shrink-0 text-[10px]">
                   {c.seller_id === user.id ? "Buyer" : "Seller"}
                 </Badge>
               </div>
-              <p className="line-clamp-1 pt-1 text-xs text-muted-foreground">
-                {c.preview?.body ?? "No messages yet"}
-              </p>
             </Link>
           ))
         ) : (

@@ -24,23 +24,51 @@ async function getRegistration() {
   return navigator.serviceWorker.register(SW_URL, { scope: "/" });
 }
 
+/** True when this device has a live subscription that is also stored in the database. */
 export async function isPushEnabled() {
   if (!isPushSupported() || Notification.permission !== "granted") return false;
-  const registration = await navigator.serviceWorker.getRegistration();
-  const sub = await registration?.pushManager.getSubscription();
-  return Boolean(sub);
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
+    const sub = await registration?.pushManager.getSubscription();
+    if (!sub) return false;
+    const { data } = await supabase
+      .from("push_subscriptions")
+      .select("id")
+      .eq("endpoint", sub.endpoint)
+      .maybeSingle();
+    return Boolean(data);
+  } catch {
+    return false;
+  }
 }
 
 /** Ask for permission, subscribe the device, and store it for this user. */
 export async function enablePush(userId: string) {
   if (!isPushSupported()) throw new Error("Kifaa hiki hakisapoti arifa za push.");
+  if (Notification.permission === "denied") {
+    throw new Error(
+      "Ruhusa ya arifa imezuiwa — iwashe kwenye mipangilio ya simu yako (Settings › Notifications).",
+    );
+  }
   const permission = await Notification.requestPermission();
+  if (permission === "denied") {
+    throw new Error(
+      "Ruhusa ya arifa imezuiwa — iwashe kwenye mipangilio ya simu yako (Settings › Notifications).",
+    );
+  }
   if (permission !== "granted") throw new Error("Ruhusa ya arifa haikutolewa.");
 
   const { publicKey } = await getVapidPublicKey();
   if (!publicKey) throw new Error("Arifa hazijawekwa vizuri kwenye seva.");
 
-  const registration = await getRegistration();
+  let registration: ServiceWorkerRegistration;
+  try {
+    registration = await getRegistration();
+  } catch {
+    throw new Error(
+      "Arifa zinapatikana kwenye app iliyochapishwa pekee. Fungua app kwenye kivinjari cha simu na uchague 'Add to Home Screen'.",
+    );
+  }
   await navigator.serviceWorker.ready;
   const subscription =
     (await registration.pushManager.getSubscription()) ??

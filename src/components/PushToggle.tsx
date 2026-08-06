@@ -13,7 +13,14 @@ export function PushToggle() {
   const supported = isPushSupported();
 
   useEffect(() => {
-    void isPushEnabled().then(setOn);
+    if (!user) return;
+    let alive = true;
+    void isPushEnabled().then((v) => {
+      if (alive) setOn(v);
+    });
+    return () => {
+      alive = false;
+    };
   }, [user?.id]);
 
   async function toggle(next: boolean) {
@@ -24,12 +31,16 @@ export function PushToggle() {
         await enablePush(user.id);
         setOn(true);
         toast.success("Arifa zimewashwa kwenye kifaa hiki.");
+        toast("Kwa matokeo bora, bonyeza menu ya kivinjari na uchague 'Add to Home Screen'.", {
+          duration: 8000,
+        });
       } else {
         await disablePush();
         setOn(false);
         toast.success("Arifa zimezimwa.");
       }
     } catch (err) {
+      setOn(await isPushEnabled());
       toast.error(err instanceof Error ? err.message : "Imeshindikana kuwasha arifa.");
     } finally {
       setBusy(false);

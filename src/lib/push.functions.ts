@@ -21,3 +21,27 @@ export const sendAppNotification = createServerFn({ method: "POST" })
       link: data.link ?? null,
     });
   });
+
+/** Notify every admin that a new KYC submission is waiting for review. */
+export const notifyAdminsKyc = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { sellerName: string; kind: string }) => input)
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: admins } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "admin");
+    let sent = 0;
+    for (const row of admins ?? []) {
+      const res = await deliverNotification({
+        userId: row.user_id,
+        kind: "kyc",
+        title: "KYC mpya imewasilishwa",
+        body: `${data.sellerName} amewasilisha nyaraka za ${data.kind === "builder" ? "Builder" : "Breeder"}.`,
+        link: "/admin/kyc",
+      });
+      sent += res.sent;
+    }
+    return { sent };
+  });

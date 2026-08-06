@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { safeFileName } from "@/lib/storage";
 import { useAuth } from "@/hooks/useAuth";
+import { notifyAdminsKyc } from "@/lib/push.functions";
 
 const STATUS_LABEL = {
   pending: "Inasubiri ukaguzi",
@@ -17,7 +18,7 @@ const STATUS_LABEL = {
 } as const;
 
 export function KycSection() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const qc = useQueryClient();
   const [kind, setKind] = useState<"breeder" | "builder">("breeder");
   const [idFile, setIdFile] = useState<File | null>(null);
@@ -72,6 +73,11 @@ export function KycSection() {
       });
       if (error) throw error;
       toast.success("Nyaraka zimetumwa kwa ukaguzi");
+      void notifyAdminsKyc({
+        data: { sellerName: profile?.full_name || "Muuzaji", kind },
+      }).catch(() => {
+        /* best-effort */
+      });
       setIdFile(null);
       setPhotos(null);
       await qc.invalidateQueries({ queryKey: ["kyc", user.id] });

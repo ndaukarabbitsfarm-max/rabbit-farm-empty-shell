@@ -106,10 +106,13 @@ function ConversationPage() {
         .eq("id", id);
       const other =
         conversation?.buyer_id === user.id ? conversation?.seller_id : conversation?.buyer_id;
+      const senderName =
+        (user.user_metadata?.["full_name"] as string | undefined) ?? "Ujumbe mpya";
       notifyUser({
         userId: other,
         kind: "chat",
-        title: "Ujumbe mpya Messenger",
+        title: senderName,
+        sender: senderName,
         body: body.trim().slice(0, 120),
         link: `/messages/${id}`,
       });

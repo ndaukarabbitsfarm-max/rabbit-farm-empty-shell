@@ -59,7 +59,7 @@ function ProfilePage() {
   const { user, profile, isAdmin, refreshProfile, signOut } = useAuth();
   const navigate = useNavigate();
   const { t, currency, lang } = usePrefs();
-  const unread = useUnreadMessages();
+  const { total: unread } = useUnreadMessages();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);

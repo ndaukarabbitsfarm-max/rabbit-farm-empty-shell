@@ -1,4 +1,8 @@
 /* Web Push handlers, merged into the generated Workbox service worker. */
+
+/** Remembers the individual lines of each grouped notification tag. */
+const GROUPS = new Map();
+
 self.addEventListener("push", (event) => {
   let payload = {};
   try {
@@ -6,23 +10,46 @@ self.addEventListener("push", (event) => {
   } catch {
     payload = { title: "Ndauka Rabbit Market", body: event.data ? event.data.text() : "" };
   }
-  const title = payload.title || "Ndauka Rabbit Market";
+
+  const tag = payload.tag || "ndauka";
+  const sender = payload.sender || payload.title || "Ndauka Rabbit Market";
+  const line = payload.body || "";
+  const url = payload.url || "/notifications";
+
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body: payload.body || "",
-      icon: "/icon-192.png",
-      badge: "/icon-192.png",
-      tag: payload.tag || "ndauka",
-      renotify: true,
-      vibrate: [120, 60, 120],
-      data: { url: payload.url || "/notifications" },
-    }),
+    (async () => {
+      // Collect what is already on screen for this tag so repeats stack together.
+      const existing = await self.registration.getNotifications({ tag });
+      const previous = GROUPS.get(tag) || [];
+      const lines = (existing.length ? previous : []).concat(line ? [`${sender}: ${line}`] : []);
+      GROUPS.set(tag, lines.slice(-8));
+
+      const grouped = lines.length > 1;
+      const title = grouped ? "Ndauka Rabbit Market" : sender;
+      const body = grouped ? `Ujumbe ${lines.length} mpya` : line;
+
+      await self.registration.showNotification(title, {
+        body,
+        icon: "/icon-192.png",
+        badge: "/icon-192.png",
+        tag,
+        renotify: true,
+        requireInteraction: false,
+        silent: false,
+        vibrate: [120, 60, 120],
+        timestamp: Date.now(),
+        data: { url, tag },
+        ...(grouped ? { body: `${body}\n${lines.join("\n")}` } : {}),
+      });
+    })(),
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const url = (event.notification.data && event.notification.data.url) || "/notifications";
+  const data = event.notification.data || {};
+  if (data.tag) GROUPS.delete(data.tag);
+  const url = data.url || "/notifications";
   event.waitUntil(
     (async () => {
       const clientList = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
@@ -36,4 +63,9 @@ self.addEventListener("notificationclick", (event) => {
       await self.clients.openWindow(url);
     })(),
   );
+});
+
+self.addEventListener("notificationclose", (event) => {
+  const data = event.notification.data || {};
+  if (data.tag) GROUPS.delete(data.tag);
 });

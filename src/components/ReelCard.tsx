@@ -51,6 +51,11 @@ export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => v
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
 
+  const { data: url } = useQuery({
+    queryKey: ["reel-media", reel.video_path],
+    queryFn: () => signedUrl("listings", reel.video_path),
+  });
+
   // Autoplay the reel that is centred in the viewport; pause the others.
   useEffect(() => {
     const el = videoRef.current;
@@ -70,11 +75,6 @@ export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => v
     observer.observe(el);
     return () => observer.disconnect();
   }, [url]);
-
-  const { data: url } = useQuery({
-    queryKey: ["reel-media", reel.video_path],
-    queryFn: () => signedUrl("listings", reel.video_path),
-  });
 
   const { data: seller } = useQuery({
     queryKey: ["reel-seller", reel.seller_id],

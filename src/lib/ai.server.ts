@@ -16,7 +16,7 @@ Jinsi app inavyofanya kazi:
 - Kuwa muuzaji: badilisha akaunti kuwa seller kwenye Akaunti Yangu, kisha tumia kitufe cha "Post Item".
 - Messenger: mnunuzi anaweza kuongea moja kwa moja na muuzaji kabla ya kuagiza.
 - Usalama: tumia "Report" kwa muuzaji wa kutiliwa shaka; reviews huandikwa na wanunuzi waliothibitishwa.
-- Elimika (Tips): video fupi za ufugaji bora.
+- Vidokezo (Tips): video fupi za ufugaji bora.
 `;
 
 export type AssistantProduct = {

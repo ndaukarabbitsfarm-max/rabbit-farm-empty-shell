@@ -17,12 +17,13 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/lib/cart";
 import { useNotifications } from "@/lib/notifications";
+import { useUnreadMessages } from "@/lib/unread";
 import { useAuth } from "@/hooks/useAuth";
 import { CreateMediaDialog, type MediaKind } from "@/components/CreateMediaDialog";
 
 const TABS = [
   { to: "/", label: "Home", icon: Home },
-  { to: "/tips", label: "Tips", icon: GraduationCap },
+  { to: "/tips", label: "Vidokezo", icon: GraduationCap },
   { to: "/messages", label: "Messenger", icon: MessageCircle },
   { to: "/cart", label: "Cart", icon: ShoppingCart },
   { to: "/profile", label: "Akaunti Yangu", icon: User },
@@ -175,6 +176,7 @@ export function PostItemFab() {
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { count } = useCart();
+  const { total: unreadMessages } = useUnreadMessages();
 
   return (
     <nav
@@ -199,6 +201,11 @@ export function BottomNav() {
                   {to === "/cart" && count > 0 ? (
                     <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-destructive-foreground">
                       {count}
+                    </span>
+                  ) : null}
+                  {to === "/messages" && unreadMessages > 0 ? (
+                    <span className="absolute -right-2 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold text-destructive-foreground">
+                      {unreadMessages > 99 ? "99+" : unreadMessages}
                     </span>
                   ) : null}
                 </span>

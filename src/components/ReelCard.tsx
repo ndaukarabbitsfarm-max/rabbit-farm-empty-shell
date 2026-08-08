@@ -1,6 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Bookmark, Heart, Loader2, MessageCircle, Share2 } from "lucide-react";
+import { Bookmark, Heart, Loader2, MessageCircle, Share2, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { signedUrl } from "@/lib/storage";
@@ -47,11 +48,33 @@ function ActionButton({
 export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => void }) {
   const { user } = useAuth();
   const qc = useQueryClient();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
 
   const { data: url } = useQuery({
     queryKey: ["reel-media", reel.video_path],
     queryFn: () => signedUrl("listings", reel.video_path),
   });
+
+  // Autoplay the reel that is centred in the viewport; pause the others.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry && entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          void el.play().catch(() => {
+            /* autoplay can be refused before any user gesture */
+          });
+        } else {
+          el.pause();
+        }
+      },
+      { threshold: [0, 0.6, 1] },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [url]);
 
   const { data: seller } = useQuery({
     queryKey: ["reel-seller", reel.seller_id],
@@ -130,7 +153,7 @@ export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => v
         userId: reel.seller_id,
         kind: "like",
         title: "Like mpya kwenye Reel yako",
-        body: "Mtumiaji amependa video yako kwenye Elimika.",
+        body: "Mtumiaji amependa video yako kwenye Vidokezo.",
         link: "/tips",
       });
     }
@@ -193,7 +216,31 @@ export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => v
   return (
     <article className="relative h-[75vh] w-full snap-start overflow-hidden rounded-2xl bg-black">
       {url ? (
-        <video src={url} controls playsInline loop className="h-full w-full object-contain" />
+        <>
+          <video
+            ref={videoRef}
+            src={url}
+            muted={muted}
+            playsInline
+            loop
+            preload="metadata"
+            onClick={() => {
+              const el = videoRef.current;
+              if (!el) return;
+              if (el.paused) void el.play().catch(() => {});
+              else el.pause();
+            }}
+            className="h-full w-full object-contain"
+          />
+          <button
+            type="button"
+            onClick={() => setMuted((v) => !v)}
+            aria-label={muted ? "Washa sauti" : "Zima sauti"}
+            className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white"
+          >
+            {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </button>
+        </>
       ) : (
         <div className="flex h-full items-center justify-center">
           <Loader2 className="h-5 w-5 animate-spin text-white/70" />

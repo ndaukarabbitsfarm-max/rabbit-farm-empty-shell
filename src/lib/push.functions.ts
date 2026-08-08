@@ -9,7 +9,14 @@ export const getVapidPublicKey = createServerFn({ method: "GET" }).handler(async
 export const sendAppNotification = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
-    (input: { userId: string; kind: string; title: string; body: string; link?: string }) => input,
+    (input: {
+      userId: string;
+      kind: string;
+      title: string;
+      body: string;
+      link?: string;
+      sender?: string;
+    }) => input,
   )
   .handler(async ({ data, context }) => {
     if (!data.userId || data.userId === context.userId) return { sent: 0 };
@@ -19,6 +26,7 @@ export const sendAppNotification = createServerFn({ method: "POST" })
       title: data.title,
       body: data.body,
       link: data.link ?? null,
+      sender: data.sender ?? null,
     });
   });
 

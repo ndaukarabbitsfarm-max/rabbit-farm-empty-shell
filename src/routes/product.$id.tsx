@@ -10,6 +10,7 @@ import {
   Loader2,
   ShoppingCart,
   MessageSquare,
+  Heart,
 } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell, CartButton } from "@/components/MobileShell";
@@ -30,6 +31,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/cart";
+import { compactCount, useProductLikes } from "@/lib/social";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/product/$id")({
   head: () => ({
@@ -55,6 +58,7 @@ function ProductDetailPage() {
   const { user } = useAuth();
   const { add } = useCart();
   const navigate = useNavigate();
+  const likeState = useProductLikes(id);
   const [startingChat, setStartingChat] = useState(false);
   const [media, setMedia] = useState<{ url: string; path: string }[]>([]);
   const [qty, setQty] = useState("1");
@@ -249,6 +253,33 @@ function ProductDetailPage() {
           </Badge>
           <h2 className="pt-2 text-lg font-semibold leading-snug">{product.title}</h2>
           <p className="pt-1 text-xl font-bold text-primary">{formatTZS(product.price_tzs)}</p>
+          <div className="flex items-center gap-3 pt-2">
+            <button
+              type="button"
+              aria-pressed={likeState.liked}
+              aria-label="Penda bidhaa hii"
+              onClick={() => {
+                if (!user) {
+                  toast.error("Ingia kwanza ili kupenda bidhaa.");
+                  return;
+                }
+                void likeState.toggle();
+              }}
+              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold active:scale-95"
+            >
+              <Heart
+                className={cn(
+                  "h-4 w-4",
+                  likeState.liked ? "fill-destructive text-destructive" : "text-muted-foreground",
+                )}
+              />
+              {compactCount(likeState.likes)}
+            </button>
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              <MessageSquare className="h-4 w-4" />
+              {compactCount(likeState.comments)}
+            </span>
+          </div>
           <dl className="grid grid-cols-2 gap-3 pt-3 text-xs">
             <Spec label="Breed" value={product.breed || "—"} />
             <Spec label="Quantity available" value={String(product.quantity)} />

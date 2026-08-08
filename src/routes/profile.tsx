@@ -27,6 +27,7 @@ import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { ProfileMenuRow } from "@/components/ProfileMenuRow";
 import { PushToggle } from "@/components/PushToggle";
+import { NotificationPrefs } from "@/components/NotificationPrefs";
 import { KycSection } from "@/components/KycSection";
 import { CreateMediaDialog } from "@/components/CreateMediaDialog";
 import { Button } from "@/components/ui/button";
@@ -59,7 +60,7 @@ function ProfilePage() {
   const { user, profile, isAdmin, refreshProfile, signOut } = useAuth();
   const navigate = useNavigate();
   const { t, currency, lang } = usePrefs();
-  const unread = useUnreadMessages();
+  const { total: unread } = useUnreadMessages();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -253,6 +254,7 @@ function ProfilePage() {
         {/* Primary menu */}
         <nav className="mx-3 overflow-hidden rounded-2xl bg-card shadow-sm">
           <PushToggle />
+          <NotificationPrefs isAdmin={isAdmin} />
           <ProfileMenuRow to="/orders" icon={ClipboardList} label={t("manageOrders")} />
           <ProfileMenuRow to="/messages" icon={MessageCircle} label={t("messenger")} dot={unread > 0} />
           <ProfileMenuRow to="/cart" icon={ShoppingCart} label={t("shoppingCart")} />

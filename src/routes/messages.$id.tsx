@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { notifyUser } from "@/lib/push-client";
+import { markConversationRead, UNREAD_KEY } from "@/lib/unread";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/messages/$id")({
@@ -82,6 +83,14 @@ function ConversationPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages?.length]);
 
+  // Opening (or receiving inside) a thread clears its unread badge immediately.
+  useEffect(() => {
+    if (!user) return;
+    void markConversationRead(id, user.id).then(() =>
+      queryClient.invalidateQueries({ queryKey: [UNREAD_KEY, user.id] }),
+    );
+  }, [id, user?.id, messages?.length, queryClient]);
+
   async function send(e: React.FormEvent) {
     e.preventDefault();
     if (!user || !body.trim()) return;
@@ -97,10 +106,13 @@ function ConversationPage() {
         .eq("id", id);
       const other =
         conversation?.buyer_id === user.id ? conversation?.seller_id : conversation?.buyer_id;
+      const senderName =
+        (user.user_metadata?.["full_name"] as string | undefined) ?? "Ujumbe mpya";
       notifyUser({
         userId: other,
         kind: "chat",
-        title: "Ujumbe mpya Messenger",
+        title: senderName,
+        sender: senderName,
         body: body.trim().slice(0, 120),
         link: `/messages/${id}`,
       });

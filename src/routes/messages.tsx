@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { LogIn, MessageSquare } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
@@ -8,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useUnreadMessages, UNREAD_KEY } from "@/lib/unread";
+import { cn } from "@/lib/utils";
 
 function formatWhen(iso: string | null | undefined) {
   if (!iso) return "";
@@ -39,6 +42,8 @@ export const Route = createFileRoute("/messages")({
 
 function MessagesPage() {
   const { user } = useAuth();
+  const qc = useQueryClient();
+  const { byConversation } = useUnreadMessages();
 
   const { data, isLoading } = useQuery({
     enabled: Boolean(user),
@@ -65,6 +70,21 @@ function MessagesPage() {
     },
   });
 
+  // Any new message should refresh the thread list previews live.
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`inbox-${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, () => {
+        void qc.invalidateQueries({ queryKey: ["conversations", user.id] });
+        void qc.invalidateQueries({ queryKey: [UNREAD_KEY, user.id] });
+      })
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [user?.id, qc]);
+
   if (!user) {
     return (
       <MobileShell title="Messages">
@@ -88,7 +108,9 @@ function MessagesPage() {
         {isLoading ? (
           <Skeleton className="h-20 w-full rounded-2xl" />
         ) : data && data.length > 0 ? (
-          data.map((c) => (
+          data.map((c) => {
+            const unread = byConversation[c.id] ?? 0;
+            return (
             <Link
               key={c.id}
               to="/messages/$id"
@@ -96,25 +118,42 @@ function MessagesPage() {
               className="surface-card block p-3.5 transition-transform active:scale-[0.99]"
             >
               <div className="flex items-start justify-between gap-2">
-                <h3 className="line-clamp-1 text-sm font-semibold">
+                <h3 className={cn("line-clamp-1 text-sm", unread ? "font-extrabold" : "font-semibold")}>
                   {(c.products as { title: string } | null)?.title ?? "Direct conversation"}
                 </h3>
-                <span className="shrink-0 text-[10px] text-muted-foreground">
+                <span
+                  className={cn(
+                    "shrink-0 text-[10px]",
+                    unread ? "font-bold text-primary" : "text-muted-foreground",
+                  )}
+                >
                   {formatWhen(c.preview?.created_at ?? c.last_message_at)}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2 pt-1">
-                <p className="line-clamp-1 text-xs text-muted-foreground">
+                <p
+                  className={cn(
+                    "line-clamp-1 text-xs",
+                    unread ? "font-semibold text-foreground" : "text-muted-foreground",
+                  )}
+                >
                   {c.preview
                     ? `${c.preview.sender_id === user.id ? "Wewe: " : ""}${c.preview.body}`
                     : "Hakuna ujumbe bado"}
                 </p>
-                <Badge variant="secondary" className="shrink-0 text-[10px]">
-                  {c.seller_id === user.id ? "Buyer" : "Seller"}
-                </Badge>
+                {unread > 0 ? (
+                  <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
+                    {unread > 99 ? "99+" : unread}
+                  </span>
+                ) : (
+                  <Badge variant="secondary" className="shrink-0 text-[10px]">
+                    {c.seller_id === user.id ? "Buyer" : "Seller"}
+                  </Badge>
+                )}
               </div>
             </Link>
-          ))
+            );
+          })
         ) : (
           <EmptyState
             icon={MessageSquare}

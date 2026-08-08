@@ -12,12 +12,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/tips")({
   head: () => ({
     meta: [
-      { title: "Elimika — Ndauka Farm" },
+      { title: "Vidokezo — Ndauka Farm" },
       {
         name: "description",
         content: "Video na maelekezo ya ufugaji bora wa sungura, kuku, bata na njiwa Tanzania.",
       },
-      { property: "og:title", content: "Elimika — Ndauka Farm" },
+      { property: "og:title", content: "Vidokezo — Ndauka Farm" },
       { property: "og:description", content: "Maelekezo ya ufugaji bora wa mifugo." },
     ],
   }),
@@ -40,7 +40,7 @@ function TipsPage() {
   });
 
   return (
-    <MobileShell title="Elimika" subtitle="Video na maarifa ya ufugaji" right={<NotificationBell />}>
+    <MobileShell title="Vidokezo" subtitle="Video na maarifa ya ufugaji" right={<NotificationBell />}>
       {isLoading ? (
         <div className="flex justify-center py-16">
           <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />

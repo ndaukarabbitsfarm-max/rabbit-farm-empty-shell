@@ -4,6 +4,8 @@ import { ImageOff, BadgeCheck, MapPin, Play } from "lucide-react";
 import { formatTZS, isVideoPath, mediaUrl } from "@/lib/marketplace";
 import type { PublicProduct } from "@/lib/marketplace";
 import { cn } from "@/lib/utils";
+import { SocialCounts } from "@/components/SocialCounts";
+import { useProductCounts } from "@/lib/social";
 
 export function useCover(mediaUrls: string[] | null | undefined) {
   const [cover, setCover] = useState<{ src: string; video: boolean } | null>(null);
@@ -61,6 +63,7 @@ export type CardProduct = PublicProduct & { verified?: boolean };
 /** Tall 3-column tile used by the New Arrivals grid. */
 export function ProductTile({ product, tall }: { product: CardProduct; tall?: boolean }) {
   const cover = useCover(product.media_urls);
+  const counts = useProductCounts()(product.id);
   return (
     <Link
       to="/product/$id"
@@ -72,6 +75,7 @@ export function ProductTile({ product, tall }: { product: CardProduct; tall?: bo
         <p className="text-[13px] font-extrabold leading-tight text-foreground">
           {formatTZS(product.price_tzs)}
         </p>
+        <SocialCounts likes={counts.likes} comments={counts.comments} />
         <p className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">
           {product.title}
         </p>
@@ -91,6 +95,7 @@ export function ProductTile({ product, tall }: { product: CardProduct; tall?: bo
 /** Narrow horizontally-scrolled deal card. */
 export function DealCard({ product }: { product: CardProduct }) {
   const cover = useCover(product.media_urls);
+  const counts = useProductCounts()(product.id);
   return (
     <Link
       to="/product/$id"
@@ -100,6 +105,7 @@ export function DealCard({ product }: { product: CardProduct }) {
       <Cover src={cover} alt={product.title} className="aspect-square" />
       <div className="space-y-0.5 p-1.5">
         <p className="text-[13px] font-extrabold leading-tight">{formatTZS(product.price_tzs)}</p>
+        <SocialCounts likes={counts.likes} comments={counts.comments} />
         <p className="text-[9px] font-medium text-primary">Lower priced than similar</p>
         <p className="line-clamp-1 text-[11px] text-muted-foreground">{product.title}</p>
         <p className="text-[10px] text-muted-foreground">{product.moq ?? 1} piece (MOQ)</p>
@@ -111,6 +117,7 @@ export function DealCard({ product }: { product: CardProduct }) {
 /** Wide 2-column card used beside the "You may be looking for" rail. */
 export function ProductMiniCard({ product }: { product: CardProduct }) {
   const cover = useCover(product.media_urls);
+  const counts = useProductCounts()(product.id);
   return (
     <Link
       to="/product/$id"
@@ -120,6 +127,7 @@ export function ProductMiniCard({ product }: { product: CardProduct }) {
       <Cover src={cover} alt={product.title} className="aspect-square" />
       <div className="space-y-0.5 p-1.5">
         <p className="text-[13px] font-extrabold leading-tight">{formatTZS(product.price_tzs)}</p>
+        <SocialCounts likes={counts.likes} comments={counts.comments} />
         <p className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">
           {product.title}
         </p>

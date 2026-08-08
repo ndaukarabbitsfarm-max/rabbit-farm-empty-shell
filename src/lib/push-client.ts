@@ -106,6 +106,7 @@ export function notifyUser(input: {
   title: string;
   body: string;
   link?: string;
+  sender?: string;
 }) {
   if (!input.userId) return;
   void sendAppNotification({
@@ -115,6 +116,7 @@ export function notifyUser(input: {
       title: input.title,
       body: input.body,
       ...(input.link ? { link: input.link } : {}),
+      ...(input.sender ? { sender: input.sender } : {}),
     },
   }).catch(() => {
     /* notifications are best-effort */

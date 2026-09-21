@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as RfqRouteImport } from './routes/rfq'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PostRouteImport } from './routes/post'
@@ -61,6 +62,11 @@ const SellersRoute = SellersRouteImport.update({
 const RfqRoute = RfqRouteImport.update({
   id: '/rfq',
   path: '/rfq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/settings': typeof SettingsRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/settings': typeof SettingsRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
   '/settings': typeof SettingsRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/privacy'
     | '/profile'
+    | '/reset-password'
     | '/rfq'
     | '/sellers'
     | '/settings'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/privacy'
     | '/profile'
+    | '/reset-password'
     | '/rfq'
     | '/sellers'
     | '/settings'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/privacy'
     | '/profile'
+    | '/reset-password'
     | '/rfq'
     | '/sellers'
     | '/settings'
@@ -381,6 +393,7 @@ export interface RootRouteChildren {
   PostRoute: typeof PostRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
   SettingsRoute: typeof SettingsRoute
@@ -428,6 +441,13 @@ declare module '@tanstack/react-router' {
       path: '/rfq'
       fullPath: '/rfq'
       preLoaderRoute: typeof RfqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -624,6 +644,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostRoute: PostRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,
   SettingsRoute: SettingsRoute,

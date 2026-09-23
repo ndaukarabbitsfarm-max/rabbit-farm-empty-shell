@@ -67,7 +67,7 @@ function ConversationPage() {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel(`messages-${id}`)
+      .channel(`messages-${id}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${id}` },

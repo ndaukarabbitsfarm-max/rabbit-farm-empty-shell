@@ -39,8 +39,12 @@ export function useUnreadMessages() {
 
   useEffect(() => {
     if (!user) return;
-    const channel = supabase
-      .channel(`unread-${user.id}`)
+    // Unique topic per mount: two components using this hook at once (bottom nav
+    // + Messages list) would otherwise reuse one channel and throw
+    // "cannot add postgres_changes callbacks after subscribe()".
+    const topic = `unread-${user.id}-${Math.random().toString(36).slice(2)}`;
+    const channel = supabase.channel(topic);
+    channel
       .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, () => {
         void qc.invalidateQueries({ queryKey: [UNREAD_KEY, user.id] });
       })
@@ -49,6 +53,7 @@ export function useUnreadMessages() {
       void supabase.removeChannel(channel);
     };
   }, [user?.id, qc]);
+
 
   return {
     total: data?.total ?? 0,

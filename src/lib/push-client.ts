@@ -12,6 +12,26 @@ export function isPushSupported() {
   );
 }
 
+/** True when the app runs inside another page (Lovable preview), where permission prompts are blocked. */
+export function isEmbedded() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
+export type PushStatus = "ready" | "on" | "unsupported" | "embedded" | "blocked";
+
+/** What the UI should say before the user taps the switch. */
+export async function getPushStatus(): Promise<PushStatus> {
+  if (!isPushSupported()) return "unsupported";
+  if (isEmbedded()) return "embedded";
+  if (Notification.permission === "denied") return "blocked";
+  return (await isPushEnabled()) ? "on" : "ready";
+}
+
 function urlBase64ToUint8Array(base64: string) {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
   const raw = window.atob((base64 + padding).replace(/-/g, "+").replace(/_/g, "/"));

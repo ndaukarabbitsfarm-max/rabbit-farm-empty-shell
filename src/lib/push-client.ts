@@ -41,7 +41,12 @@ function urlBase64ToUint8Array(base64: string) {
 async function getRegistration() {
   const existing = await navigator.serviceWorker.getRegistration();
   if (existing) return existing;
-  return navigator.serviceWorker.register(SW_URL, { scope: "/" });
+  try {
+    return await navigator.serviceWorker.register(SW_URL, { scope: "/" });
+  } catch {
+    // Fallback: the standalone push worker (always served from /public).
+    return navigator.serviceWorker.register("/push-sw.js", { scope: "/" });
+  }
 }
 
 /** True when this device has a live subscription that is also stored in the database. */

@@ -64,11 +64,15 @@ export function ProductComments({
       link: `/product/${productId}`,
     });
     setText("");
-    await qc.invalidateQueries({ queryKey: ["product-comments", productId] });
+    toast.success("Maoni yametumwa");
+    await Promise.all([
+      qc.invalidateQueries({ queryKey: ["product-comments", productId] }),
+      qc.invalidateQueries({ queryKey: ["product-likes", productId] }),
+    ]);
   }
 
   return (
-    <section className="surface-card space-y-3 p-4">
+    <section id="product-comments" className="surface-card scroll-mt-20 space-y-3 p-4">
       <h3 className="text-sm font-semibold">Maoni na maswali ({comments?.length ?? 0})</h3>
       {user ? (
         <form onSubmit={post} className="flex items-center gap-2">

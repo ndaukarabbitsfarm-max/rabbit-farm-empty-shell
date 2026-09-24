@@ -275,10 +275,19 @@ function ProductDetailPage() {
               />
               {compactCount(likeState.likes)}
             </button>
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+            <button
+              type="button"
+              aria-label="Fungua maoni na maswali"
+              onClick={() => {
+                const el = document.getElementById("product-comments");
+                el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                setTimeout(() => el?.querySelector<HTMLInputElement>("input")?.focus(), 400);
+              }}
+              className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground active:scale-95"
+            >
               <MessageSquare className="h-4 w-4" />
               {compactCount(likeState.comments)}
-            </span>
+            </button>
           </div>
           <dl className="grid grid-cols-2 gap-3 pt-3 text-xs">
             <Spec label="Breed" value={product.breed || "—"} />

@@ -86,7 +86,24 @@ export function useProductLikes(productId: string) {
         .eq("product_id", productId)
         .eq("user_id", user.id);
     } else {
-      await supabase.from("product_likes").insert({ product_id: productId, user_id: user.id });
+      const { error } = await supabase
+        .from("product_likes")
+        .insert({ product_id: productId, user_id: user.id });
+      if (!error) {
+        const { data: p } = await supabase
+          .from("products")
+          .select("seller_id, title")
+          .eq("id", productId)
+          .maybeSingle();
+        const { notifyUser } = await import("@/lib/push-client");
+        notifyUser({
+          userId: p?.seller_id,
+          kind: "like",
+          title: "❤️ Like mpya",
+          body: `Mtu amependa ${p?.title ?? "bidhaa yako"}`,
+          link: `/product/${productId}`,
+        });
+      }
     }
     await Promise.all([
       qc.invalidateQueries({ queryKey: ["product-likes", productId, user.id] }),

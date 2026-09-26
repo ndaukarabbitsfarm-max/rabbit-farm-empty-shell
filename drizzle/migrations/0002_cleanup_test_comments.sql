@@ -1,0 +1,2 @@
+DELETE FROM public.notifications WHERE body IN ('Dutch buck (dume): Test jibu: ndiyo inapatikana','Dutch buck (dume): Test swali: bei ya jumla?');
+DELETE FROM public.product_comments WHERE comment IN ('Test swali: bei ya jumla?','Test jibu: ndiyo inapatikana');

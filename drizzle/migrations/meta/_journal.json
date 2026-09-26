@@ -8,6 +8,20 @@
       "when": 1790415157520,
       "tag": "0000_push_subscriptions_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790415239977,
+      "tag": "0001_product_comment_replies",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790415294912,
+      "tag": "0002_cleanup_test_comments",
+      "breakpoints": true
     }
   ]
 }

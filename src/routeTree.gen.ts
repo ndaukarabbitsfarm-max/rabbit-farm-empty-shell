@@ -15,6 +15,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as RfqRouteImport } from './routes/rfq'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RegistryRouteImport } from './routes/registry'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PostRouteImport } from './routes/post'
@@ -22,9 +23,11 @@ import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyListingsRouteImport } from './routes/my-listings'
 import { Route as MessagesRouteImport } from './routes/messages'
+import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as HowToSellRouteImport } from './routes/how-to-sell'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as FavoritesRouteImport } from './routes/favorites'
+import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as CartRouteImport } from './routes/cart'
@@ -69,6 +72,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegistryRoute = RegistryRouteImport.update({
+  id: '/registry',
+  path: '/registry',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -104,6 +112,11 @@ const MessagesRoute = MessagesRouteImport.update({
   path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MembershipRoute = MembershipRouteImport.update({
+  id: '/membership',
+  path: '/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowToSellRoute = HowToSellRouteImport.update({
   id: '/how-to-sell',
   path: '/how-to-sell',
@@ -117,6 +130,11 @@ const HelpRoute = HelpRouteImport.update({
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentsRoute = DocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CouponsRoute = CouponsRouteImport.update({
@@ -193,9 +211,11 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/coupons': typeof CouponsRoute
+  '/documents': typeof DocumentsRoute
   '/favorites': typeof FavoritesRoute
   '/help': typeof HelpRoute
   '/how-to-sell': typeof HowToSellRoute
+  '/membership': typeof MembershipRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/notifications': typeof NotificationsRoute
@@ -203,6 +223,7 @@ export interface FileRoutesByFullPath {
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/registry': typeof RegistryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
@@ -224,9 +245,11 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/coupons': typeof CouponsRoute
+  '/documents': typeof DocumentsRoute
   '/favorites': typeof FavoritesRoute
   '/help': typeof HelpRoute
   '/how-to-sell': typeof HowToSellRoute
+  '/membership': typeof MembershipRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/notifications': typeof NotificationsRoute
@@ -234,6 +257,7 @@ export interface FileRoutesByTo {
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/registry': typeof RegistryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
@@ -256,9 +280,11 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/categories': typeof CategoriesRoute
   '/coupons': typeof CouponsRoute
+  '/documents': typeof DocumentsRoute
   '/favorites': typeof FavoritesRoute
   '/help': typeof HelpRoute
   '/how-to-sell': typeof HowToSellRoute
+  '/membership': typeof MembershipRoute
   '/messages': typeof MessagesRouteWithChildren
   '/my-listings': typeof MyListingsRoute
   '/notifications': typeof NotificationsRoute
@@ -266,6 +292,7 @@ export interface FileRoutesById {
   '/post': typeof PostRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/registry': typeof RegistryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/rfq': typeof RfqRoute
   '/sellers': typeof SellersRoute
@@ -289,9 +316,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/coupons'
+    | '/documents'
     | '/favorites'
     | '/help'
     | '/how-to-sell'
+    | '/membership'
     | '/messages'
     | '/my-listings'
     | '/notifications'
@@ -299,6 +328,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/privacy'
     | '/profile'
+    | '/registry'
     | '/reset-password'
     | '/rfq'
     | '/sellers'
@@ -320,9 +350,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/coupons'
+    | '/documents'
     | '/favorites'
     | '/help'
     | '/how-to-sell'
+    | '/membership'
     | '/messages'
     | '/my-listings'
     | '/notifications'
@@ -330,6 +362,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/privacy'
     | '/profile'
+    | '/registry'
     | '/reset-password'
     | '/rfq'
     | '/sellers'
@@ -351,9 +384,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/categories'
     | '/coupons'
+    | '/documents'
     | '/favorites'
     | '/help'
     | '/how-to-sell'
+    | '/membership'
     | '/messages'
     | '/my-listings'
     | '/notifications'
@@ -361,6 +396,7 @@ export interface FileRouteTypes {
     | '/post'
     | '/privacy'
     | '/profile'
+    | '/registry'
     | '/reset-password'
     | '/rfq'
     | '/sellers'
@@ -383,9 +419,11 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CategoriesRoute: typeof CategoriesRoute
   CouponsRoute: typeof CouponsRoute
+  DocumentsRoute: typeof DocumentsRoute
   FavoritesRoute: typeof FavoritesRoute
   HelpRoute: typeof HelpRoute
   HowToSellRoute: typeof HowToSellRoute
+  MembershipRoute: typeof MembershipRoute
   MessagesRoute: typeof MessagesRouteWithChildren
   MyListingsRoute: typeof MyListingsRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -393,6 +431,7 @@ export interface RootRouteChildren {
   PostRoute: typeof PostRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
+  RegistryRoute: typeof RegistryRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RfqRoute: typeof RfqRoute
   SellersRoute: typeof SellersRoute
@@ -450,6 +489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/registry': {
+      id: '/registry'
+      path: '/registry'
+      fullPath: '/registry'
+      preLoaderRoute: typeof RegistryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -499,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/membership': {
+      id: '/membership'
+      path: '/membership'
+      fullPath: '/membership'
+      preLoaderRoute: typeof MembershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-to-sell': {
       id: '/how-to-sell'
       path: '/how-to-sell'
@@ -518,6 +571,13 @@ declare module '@tanstack/react-router' {
       path: '/favorites'
       fullPath: '/favorites'
       preLoaderRoute: typeof FavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documents': {
+      id: '/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof DocumentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/coupons': {
@@ -634,9 +694,11 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CategoriesRoute: CategoriesRoute,
   CouponsRoute: CouponsRoute,
+  DocumentsRoute: DocumentsRoute,
   FavoritesRoute: FavoritesRoute,
   HelpRoute: HelpRoute,
   HowToSellRoute: HowToSellRoute,
+  MembershipRoute: MembershipRoute,
   MessagesRoute: MessagesRouteWithChildren,
   MyListingsRoute: MyListingsRoute,
   NotificationsRoute: NotificationsRoute,
@@ -644,6 +706,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostRoute: PostRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
+  RegistryRoute: RegistryRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RfqRoute: RfqRoute,
   SellersRoute: SellersRoute,

@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep TRBA association data in additive `trba_*` tables and retain legacy commerce data/URLs to preserve existing records.
+- Membership approval and leadership writes are enforced by database admin-role policies; NIDA stays owner/admin-only and never appears on membership cards.
+- Use `src/lib/trba.ts` for identity and registration/governance validation so association screens share the same rules.

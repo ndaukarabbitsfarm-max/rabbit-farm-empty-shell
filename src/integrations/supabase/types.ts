@@ -891,6 +891,203 @@ export type Database = {
         }
         Relationships: []
       }
+      trba_announcements: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string
+          id: string
+          kind: string
+          location: string | null
+          meeting_at: string | null
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by: string
+          id?: string
+          kind: string
+          location?: string | null
+          meeting_at?: string | null
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          kind?: string
+          location?: string | null
+          meeting_at?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      trba_documents: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string
+          file_url: string
+          id: string
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by: string
+          file_url: string
+          id?: string
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string
+          file_url?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      trba_leadership_terms: {
+        Row: {
+          created_at: string
+          created_by: string
+          ends_on: string
+          id: string
+          member_id: string
+          position: string
+          starts_on: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          ends_on: string
+          id?: string
+          member_id: string
+          position: string
+          starts_on: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          ends_on?: string
+          id?: string
+          member_id?: string
+          position?: string
+          starts_on?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trba_leadership_terms_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "trba_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trba_members: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          member_number: number
+          nida_number: string
+          phone: string
+          region: string
+          reviewed_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          member_number?: never
+          nida_number: string
+          phone: string
+          region: string
+          reviewed_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          member_number?: never
+          nida_number?: string
+          phone?: string
+          region?: string
+          reviewed_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trba_rabbits: {
+        Row: {
+          breed: string
+          created_at: string
+          dam_id: string | null
+          date_of_birth: string
+          id: string
+          name: string
+          notes: string | null
+          owner_id: string
+          registration_number: number
+          sex: string
+          sire_id: string | null
+        }
+        Insert: {
+          breed: string
+          created_at?: string
+          dam_id?: string | null
+          date_of_birth: string
+          id?: string
+          name: string
+          notes?: string | null
+          owner_id: string
+          registration_number?: never
+          sex: string
+          sire_id?: string | null
+        }
+        Update: {
+          breed?: string
+          created_at?: string
+          dam_id?: string | null
+          date_of_birth?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          owner_id?: string
+          registration_number?: never
+          sex?: string
+          sire_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trba_rabbits_dam_id_fkey"
+            columns: ["dam_id"]
+            isOneToOne: false
+            referencedRelation: "trba_rabbits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trba_rabbits_sire_id_fkey"
+            columns: ["sire_id"]
+            isOneToOne: false
+            referencedRelation: "trba_rabbits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string

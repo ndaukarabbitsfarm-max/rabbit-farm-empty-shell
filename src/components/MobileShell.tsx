@@ -30,14 +30,19 @@ const TABS = [
 ] as const;
 
 export const TOP_TABS = [
-  { to: "/", label: "Bidhaa Zote" },
-  { to: "/sellers", label: "Wafugaji" },
-  { to: "/categories", label: "Masoko" },
+  { to: "/", label: "Nyumbani" },
+  { to: "/membership", label: "Uanachama" },
+  { to: "/registry", label: "Registry" },
+  { to: "/documents", label: "Nyaraka" },
+  { to: "/categories", label: "Soko" },
 ] as const;
 
 export function TopTabs({ active }: { active: string }) {
   return (
-    <nav aria-label="Sehemu za soko" className="flex items-center gap-5 text-sm">
+    <nav
+      aria-label="Sehemu za chama"
+      className="flex items-center gap-5 overflow-x-auto text-sm [scrollbar-width:none]"
+    >
       {TOP_TABS.map((t) => (
         <Link
           key={t.to}

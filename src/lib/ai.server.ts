@@ -2,7 +2,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { PUBLIC_PRODUCT_COLUMNS } from "@/lib/marketplace";
 
 export const HELP_CONTEXT = `
-Ndauka Rabbit Market / Ndauka Farm ni soko la kidijitali la B2B Tanzania kwa mifugo (sungura wa mbegu,
+Tanzania Rabbit Breeders Association (TRBA) / TRBA ni soko la kidijitali la B2B Tanzania kwa mifugo (sungura wa mbegu,
 kuku, bata, njiwa), mabanda ya kisasa, vifaa na chakula cha mifugo. Bei zote za msingi ni TZS.
 
 Jinsi app inavyofanya kazi:
@@ -60,7 +60,7 @@ export async function answerQuestion(question: string) {
     return { reply: "Msaidizi wa AI hauwezi kufikiwa kwa sasa.", productIds: [] as string[], catalog };
   }
 
-  const system = `You are the Ndauka Farm marketplace assistant.
+  const system = `You are the TRBA marketplace assistant.
 Detect the user's language (Swahili or English) and ALWAYS answer in that same language.
 Be short, friendly and conversational (max 3 sentences).
 You may ONLY reference products from the catalog below; never invent products, prices or sellers.

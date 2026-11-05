@@ -14,12 +14,12 @@ export const Route = createFileRoute("/category/$slug")({
     const name = categoryName(params.slug);
     return {
       meta: [
-        { title: `${name} — Ndauka Rabbits Farm Marketplace` },
+        { title: `${name} — Tanzania Rabbit Breeders Association (TRBA)` },
         {
           name: "description",
           content: `Listings in ${name} from Tanzanian rabbit farmers and suppliers, priced in TZS.`,
         },
-        { property: "og:title", content: `${name} — Ndauka Rabbits Farm Marketplace` },
+        { property: "og:title", content: `${name} — Tanzania Rabbit Breeders Association (TRBA)` },
         { property: "og:description", content: `Listings in ${name} from Tanzanian suppliers.` },
       ],
     };

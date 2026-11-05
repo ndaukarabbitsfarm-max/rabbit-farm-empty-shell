@@ -12,12 +12,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/tips")({
   head: () => ({
     meta: [
-      { title: "Vidokezo — Ndauka Farm" },
+      { title: "Vidokezo — TRBA" },
       {
         name: "description",
         content: "Video na maelekezo ya ufugaji bora wa sungura, kuku, bata na njiwa Tanzania.",
       },
-      { property: "og:title", content: "Vidokezo — Ndauka Farm" },
+      { property: "og:title", content: "Vidokezo — TRBA" },
       { property: "og:description", content: "Maelekezo ya ufugaji bora wa mifugo." },
     ],
   }),

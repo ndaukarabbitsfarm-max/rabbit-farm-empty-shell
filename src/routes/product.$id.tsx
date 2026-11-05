@@ -37,13 +37,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/product/$id")({
   head: () => ({
     meta: [
-      { title: "Listing details — Ndauka Rabbits Farm Marketplace" },
+      { title: "Listing details — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
           "View breed specs, price in TZS and seller location, then call, chat on WhatsApp or request an order.",
       },
-      { property: "og:title", content: "Listing details — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Listing details — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "View breed specs, price in TZS and seller location for this listing.",

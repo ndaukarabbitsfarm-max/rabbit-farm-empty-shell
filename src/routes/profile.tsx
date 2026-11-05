@@ -47,12 +47,12 @@ import { safeFileName, signedUrl } from "@/lib/storage";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Akaunti Yangu — Ndauka Farm Marketplace" },
+      { title: "Akaunti Yangu — TRBA" },
       {
         name: "description",
         content: "Manage your buyer or seller profile, contact details and location on the marketplace.",
       },
-      { property: "og:title", content: "Akaunti Yangu — Ndauka Farm Marketplace" },
+      { property: "og:title", content: "Akaunti Yangu — TRBA" },
       { property: "og:description", content: "Manage your buyer or seller profile and contacts." },
     ],
   }),

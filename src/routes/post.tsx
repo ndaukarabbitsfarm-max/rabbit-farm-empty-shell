@@ -10,13 +10,13 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/post")({
   head: () => ({
     meta: [
-      { title: "Post an Item — Ndauka Rabbits Farm Marketplace" },
+      { title: "Post an Item — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
           "List your breeding rabbits, poultry, cages, feeds or equipment with photos, stock, price in TZS and location.",
       },
-      { property: "og:title", content: "Post an Item — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Post an Item — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "List your rabbits, poultry, cages, feeds or equipment for buyers across Tanzania.",

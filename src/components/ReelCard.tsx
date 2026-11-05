@@ -190,7 +190,7 @@ export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => v
         userId: reel.seller_id,
         kind: "follow",
         title: "Una mfuasi mpya",
-        body: "Mtumiaji ameanza kukufuata kwenye Ndauka Farm.",
+        body: "Mtumiaji ameanza kukufuata kwenye TRBA.",
         link: "/tips",
       });
     }
@@ -201,7 +201,7 @@ export function ReelCard({ reel, onComments }: { reel: Reel; onComments: () => v
     const link = `${window.location.origin}/tips`;
     try {
       if (navigator.share) {
-        await navigator.share({ title: "Ndauka Farm", text: reel.caption ?? "Angalia Reel hii", url: link });
+        await navigator.share({ title: "TRBA", text: reel.caption ?? "Angalia Reel hii", url: link });
       } else {
         await navigator.clipboard.writeText(link);
         toast.success("Kiungo kimenakiliwa.");

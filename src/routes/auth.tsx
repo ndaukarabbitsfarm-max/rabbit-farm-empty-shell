@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Ndauka Rabbits Farm Marketplace" },
+      { title: "Sign in — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content: "Create a buyer or seller account to trade rabbits and farm supplies in Tanzania.",
       },
-      { property: "og:title", content: "Sign in — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Sign in — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "Create a buyer or seller account to trade rabbits and farm supplies.",
@@ -180,7 +180,7 @@ function AuthPage() {
         <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-foreground/15">
           <Rabbit className="h-7 w-7" />
         </span>
-        <h1 className="mt-3 text-xl font-semibold">Ndauka Rabbits Farm</h1>
+        <h1 className="mt-3 text-xl font-semibold">TRBA</h1>
         <p className="mt-1 text-sm opacity-85">Marketplace ya sungura na vifaa vya shamba</p>
       </div>
 

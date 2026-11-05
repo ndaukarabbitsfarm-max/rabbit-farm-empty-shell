@@ -17,13 +17,13 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Cart & Checkout — Ndauka Rabbits Farm Marketplace" },
+      { title: "Cart & Checkout — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
           "Review your rabbits, cages and feed items, see itemized TZS totals and submit your order with delivery details.",
       },
-      { property: "og:title", content: "Cart & Checkout — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Cart & Checkout — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "Review itemized TZS totals and submit your order with delivery details.",

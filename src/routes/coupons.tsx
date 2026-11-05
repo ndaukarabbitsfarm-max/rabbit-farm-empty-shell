@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/coupons")({
   head: () => ({
     meta: [
-      { title: "Kuponi Zangu — Ndauka Farm" },
-      { name: "description", content: "Kuponi na punguzo lako la manunuzi ya jumla Ndauka Farm." },
-      { property: "og:title", content: "Kuponi Zangu — Ndauka Farm" },
+      { title: "Kuponi Zangu — TRBA" },
+      { name: "description", content: "Kuponi na punguzo lako la manunuzi ya jumla TRBA." },
+      { property: "og:title", content: "Kuponi Zangu — TRBA" },
       { property: "og:description", content: "Kuponi na punguzo la manunuzi ya jumla." },
     ],
   }),

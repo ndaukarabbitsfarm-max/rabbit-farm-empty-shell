@@ -117,6 +117,19 @@ function HomePage() {
     },
   });
 
+  const { data: announcements } = useQuery({
+    queryKey: ["trba-announcements"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("trba_announcements")
+        .select("id, title, body, kind, meeting_at, location, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) return [];
+      return data;
+    },
+  });
+
   const list: CardProduct[] = useMemo(
     () =>
       (products ?? []).map((p) => ({
@@ -158,6 +171,76 @@ function HomePage() {
       {aiOpen ? <AiAssistantSheet onClose={() => setAiOpen(false)} /> : null}
 
       <div className="-mt-3 rounded-t-2xl bg-muted/40 pb-4">
+        {/* Association hero */}
+        <section className="px-3 pt-3">
+          <div className="overflow-hidden rounded-2xl bg-card shadow-sm">
+            <div className="relative">
+              <img
+                src={heroImg}
+                alt="Sungura wa kuzaliana wa TRBA"
+                className="h-36 w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+                <p className="text-[13px] font-extrabold leading-tight">
+                  Tanzania Rabbit Breeders Association
+                </p>
+                <p className="pt-0.5 text-[10px] italic leading-tight opacity-90">
+                  {TRBA.slogan}
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2 p-2.5">
+              <Link
+                to="/membership"
+                className="flex flex-col items-center gap-1 rounded-xl bg-primary px-2 py-2.5 text-primary-foreground"
+              >
+                <CreditCard className="h-4 w-4" />
+                <span className="text-[10px] font-bold leading-tight">Jiunge na Chama</span>
+              </Link>
+              <Link
+                to="/registry"
+                className="flex flex-col items-center gap-1 rounded-xl bg-accent px-2 py-2.5 text-accent-foreground"
+              >
+                <Rabbit className="h-4 w-4" />
+                <span className="text-[10px] font-bold leading-tight">Daftari la Nasaba</span>
+              </Link>
+              <Link
+                to="/documents"
+                className="flex flex-col items-center gap-1 rounded-xl bg-accent px-2 py-2.5 text-accent-foreground"
+              >
+                <BookOpen className="h-4 w-4" />
+                <span className="text-[10px] font-bold leading-tight">Nyaraka za Chama</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Association announcements & meetings */}
+        {announcements && announcements.length > 0 ? (
+          <section className="px-3 pt-3">
+            <div className="surface-card space-y-2.5 p-3.5">
+              <p className="flex items-center gap-1.5 text-[13px] font-extrabold">
+                <Megaphone className="h-4 w-4 text-gold" /> Matangazo ya Chama
+              </p>
+              {announcements.map((a) => (
+                <div key={a.id} className="border-t border-border/60 pt-2 first:border-t-0 first:pt-0">
+                  <p className="text-xs font-bold leading-snug">{a.title}</p>
+                  <p className="line-clamp-2 pt-0.5 text-[11px] leading-snug text-muted-foreground">
+                    {a.body}
+                  </p>
+                  {a.kind === "meeting" && a.meeting_at ? (
+                    <p className="pt-0.5 text-[10px] font-semibold text-primary">
+                      Mkutano: {new Date(a.meeting_at).toLocaleString("sw-TZ")}
+                      {a.location ? ` · ${a.location}` : ""}
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
         {/* Stories from sellers (active 24h) */}
         <StoriesBar />
 

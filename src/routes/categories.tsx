@@ -16,13 +16,13 @@ const ICONS = {
 export const Route = createFileRoute("/categories")({
   head: () => ({
     meta: [
-      { title: "Categories — Ndauka Rabbits Farm Marketplace" },
+      { title: "Categories — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
           "Browse breeding rabbits, custom cages, feeds and supplements, and farm equipment categories.",
       },
-      { property: "og:title", content: "Categories — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Categories — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "Browse rabbit, cage, feed and equipment categories on the marketplace.",

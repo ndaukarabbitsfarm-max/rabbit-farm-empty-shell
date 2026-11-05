@@ -33,13 +33,13 @@ const STATUSES: Enums<"order_status">[] = [
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
-      { title: "Orders — Ndauka Rabbits Farm Marketplace" },
+      { title: "Orders — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
           "Track orders you placed and incoming orders for your listings, with buyer contact, delivery address and TZS totals.",
       },
-      { property: "og:title", content: "Orders — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Orders — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "Track your purchases and incoming seller orders with TZS totals.",

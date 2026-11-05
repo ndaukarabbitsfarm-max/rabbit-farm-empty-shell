@@ -13,9 +13,9 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/favorites")({
   head: () => ({
     meta: [
-      { title: "Vipendwa Vyangu — Ndauka Farm" },
+      { title: "Vipendwa Vyangu — TRBA" },
       { name: "description", content: "Bidhaa ulizohifadhi kwenye orodha yako ya vipendwa." },
-      { property: "og:title", content: "Vipendwa Vyangu — Ndauka Farm" },
+      { property: "og:title", content: "Vipendwa Vyangu — TRBA" },
       { property: "og:description", content: "Bidhaa ulizohifadhi kwenye orodha yako." },
     ],
   }),

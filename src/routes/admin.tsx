@@ -1,34 +1,109 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ShieldAlert, Inbox, Check, X, Eye, Users, Package, BadgeCheck } from "lucide-react";
+import { ShieldAlert, Inbox, Check, X, Eye, Users, Package, BadgeCheck, Megaphone } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatTZS, categoryName } from "@/lib/marketplace";
+import { memberCode } from "@/lib/trba";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Admin Review — Ndauka Rabbits Farm Marketplace" },
+      { title: "Dashibodi ya Viongozi — TRBA" },
       {
         name: "description",
-        content: "Review and approve seller profiles and submitted marketplace listings.",
+        content: "Simamia wanachama, idhini za usajili, matangazo na orodha za soko la TRBA.",
       },
-      { property: "og:title", content: "Admin Review — Ndauka Rabbits Farm Marketplace" },
-      { property: "og:description", content: "Approve seller profiles and submitted listings." },
+      { property: "og:title", content: "Dashibodi ya Viongozi — TRBA" },
+      { property: "og:description", content: "Usimamizi wa wanachama na matangazo ya TRBA." },
     ],
   }),
   component: AdminPage,
 });
 
 function AdminPage() {
-  const { isAdmin, loading } = useAuth();
+  const { isAdmin, loading, user } = useAuth();
   const qc = useQueryClient();
+  const [annSaving, setAnnSaving] = useState(false);
+
+  const { data: pendingMembers } = useQuery({
+    enabled: isAdmin,
+    queryKey: ["admin-trba-members"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("trba_members")
+        .select("*")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const reviewMember = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: "approved" | "rejected" }) => {
+      const { error } = await supabase
+        .from("trba_members")
+        .update({ status, reviewed_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Uanachama umesasishwa");
+      qc.invalidateQueries({ queryKey: ["admin-trba-members"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const { data: announcements } = useQuery({
+    enabled: isAdmin,
+    queryKey: ["admin-trba-announcements"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("trba_announcements")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  async function publishAnnouncement(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!user) return;
+    const f = new FormData(e.currentTarget);
+    setAnnSaving(true);
+    try {
+      const kind = String(f.get("kind"));
+      const { error } = await supabase.from("trba_announcements").insert({
+        title: String(f.get("title")),
+        body: String(f.get("body")),
+        kind,
+        meeting_at: kind === "meeting" && f.get("meeting_at") ? new Date(String(f.get("meeting_at"))).toISOString() : null,
+        location: String(f.get("location")) || null,
+        created_by: user.id,
+      });
+      if (error) throw error;
+      (e.target as HTMLFormElement).reset();
+      await qc.invalidateQueries({ queryKey: ["admin-trba-announcements"] });
+      toast.success("Tangazo limetangazwa");
+    } catch {
+      toast.error("Tangazo halijahifadhiwa. Jaribu tena.");
+    } finally {
+      setAnnSaving(false);
+    }
+  }
 
   const { data: pendingProducts } = useQuery({
     enabled: isAdmin,
@@ -153,18 +228,114 @@ function AdminPage() {
         ))}
       </div>
 
-      <Tabs defaultValue="listings" className="px-4 pt-4">
-        <TabsList className="grid w-full grid-cols-3 rounded-xl">
-          <TabsTrigger value="listings" className="rounded-lg">
+      <Tabs defaultValue="members" className="px-4 pt-4">
+        <TabsList className="grid w-full grid-cols-5 rounded-xl">
+          <TabsTrigger value="members" className="rounded-lg px-1 text-[11px]">
+            Wanachama
+          </TabsTrigger>
+          <TabsTrigger value="announce" className="rounded-lg px-1 text-[11px]">
+            Matangazo
+          </TabsTrigger>
+          <TabsTrigger value="listings" className="rounded-lg px-1 text-[11px]">
             Listings
           </TabsTrigger>
-          <TabsTrigger value="sellers" className="rounded-lg">
+          <TabsTrigger value="sellers" className="rounded-lg px-1 text-[11px]">
             Sellers
           </TabsTrigger>
-          <TabsTrigger value="verify" className="rounded-lg">
+          <TabsTrigger value="verify" className="rounded-lg px-1 text-[11px]">
             Beji
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="members" className="space-y-3 pt-4">
+          {pendingMembers && pendingMembers.length > 0 ? (
+            pendingMembers.map((m) => (
+              <div key={m.id} className="surface-card p-3.5">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-sm font-semibold">{m.full_name}</h3>
+                  <Badge variant="secondary" className="font-mono text-[10px]">
+                    {memberCode(m.member_number)}
+                  </Badge>
+                </div>
+                <p className="pt-1 text-xs text-muted-foreground">
+                  NIDA: {m.nida_number} · {m.region}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {m.phone} · {m.email}
+                </p>
+                <div className="flex gap-2 pt-3">
+                  <Button
+                    size="sm"
+                    className="flex-1 rounded-lg"
+                    onClick={() => reviewMember.mutate({ id: m.id, status: "approved" })}
+                  >
+                    <Check className="mr-1 h-3.5 w-3.5" /> Idhinisha
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 rounded-lg"
+                    onClick={() => reviewMember.mutate({ id: m.id, status: "rejected" })}
+                  >
+                    <X className="mr-1 h-3.5 w-3.5" /> Kataa
+                  </Button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <EmptyState icon={Inbox} title="Hakuna maombi ya uanachama yanayosubiri" />
+          )}
+        </TabsContent>
+
+        <TabsContent value="announce" className="space-y-3 pt-4">
+          <form onSubmit={publishAnnouncement} className="surface-card space-y-3 p-3.5">
+            <p className="flex items-center gap-1.5 text-sm font-bold">
+              <Megaphone className="h-4 w-4 text-gold" /> Tangazo / Mkutano mpya
+            </p>
+            <div className="space-y-1.5">
+              <Label htmlFor="ann-title">Kichwa</Label>
+              <Input id="ann-title" name="title" required maxLength={140} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="ann-body">Maelezo</Label>
+              <Textarea id="ann-body" name="body" required rows={3} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="ann-kind">Aina</Label>
+                <select id="ann-kind" name="kind" className="trba-select">
+                  <option value="announcement">Tangazo</option>
+                  <option value="meeting">Mkutano</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="ann-location">Mahali (mkutano)</Label>
+                <Input id="ann-location" name="location" maxLength={120} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="ann-meeting-at">Tarehe na muda (mkutano)</Label>
+              <Input id="ann-meeting-at" name="meeting_at" type="datetime-local" />
+            </div>
+            <Button disabled={annSaving} className="w-full rounded-lg">
+              {annSaving ? "Inatuma…" : "Tangaza"}
+            </Button>
+          </form>
+          {announcements && announcements.length > 0 ? (
+            announcements.map((a) => (
+              <div key={a.id} className="surface-card p-3.5">
+                <p className="text-sm font-semibold">{a.title}</p>
+                <p className="pt-0.5 text-xs text-muted-foreground">{a.body}</p>
+                <p className="pt-1 text-[10px] text-muted-foreground">
+                  {a.kind === "meeting" ? "Mkutano" : "Tangazo"} ·{" "}
+                  {new Date(a.created_at).toLocaleDateString("sw-TZ")}
+                </p>
+              </div>
+            ))
+          ) : (
+            <EmptyState icon={Inbox} title="Hakuna matangazo bado" />
+          )}
+        </TabsContent>
 
         <TabsContent value="listings" className="space-y-3 pt-4">
           {pendingProducts && pendingProducts.length > 0 ? (

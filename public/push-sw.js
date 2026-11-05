@@ -8,11 +8,11 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data ? event.data.json() : {};
   } catch {
-    payload = { title: "Ndauka Rabbit Market", body: event.data ? event.data.text() : "" };
+    payload = { title: "Tanzania Rabbit Breeders Association (TRBA)", body: event.data ? event.data.text() : "" };
   }
 
   const tag = payload.tag || "ndauka";
-  const sender = payload.sender || payload.title || "Ndauka Rabbit Market";
+  const sender = payload.sender || payload.title || "Tanzania Rabbit Breeders Association (TRBA)";
   const line = payload.body || "";
   const url = payload.url || "/notifications";
 
@@ -25,7 +25,7 @@ self.addEventListener("push", (event) => {
       GROUPS.set(tag, lines.slice(-8));
 
       const grouped = lines.length > 1;
-      const title = grouped ? "Ndauka Rabbit Market" : sender;
+      const title = grouped ? "Tanzania Rabbit Breeders Association (TRBA)" : sender;
       const body = grouped ? `Ujumbe ${lines.length} mpya` : line;
 
       await self.registration.showNotification(title, {

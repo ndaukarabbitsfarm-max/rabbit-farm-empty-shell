@@ -21,6 +21,9 @@ import {
   Camera,
   Store,
   ClipboardCheck,
+  CreditCard,
+  Rabbit,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
@@ -44,12 +47,12 @@ import { safeFileName, signedUrl } from "@/lib/storage";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Akaunti Yangu — Ndauka Farm Marketplace" },
+      { title: "Akaunti Yangu — TRBA" },
       {
         name: "description",
         content: "Manage your buyer or seller profile, contact details and location on the marketplace.",
       },
-      { property: "og:title", content: "Akaunti Yangu — Ndauka Farm Marketplace" },
+      { property: "og:title", content: "Akaunti Yangu — TRBA" },
       { property: "og:description", content: "Manage your buyer or seller profile and contacts." },
     ],
   }),
@@ -255,6 +258,9 @@ function ProfilePage() {
         <nav className="mx-3 overflow-hidden rounded-2xl bg-card shadow-sm">
           <PushToggle />
           <NotificationPrefs isAdmin={isAdmin} />
+          <ProfileMenuRow to="/membership" icon={CreditCard} label="Uanachama wa TRBA" />
+          <ProfileMenuRow to="/registry" icon={Rabbit} label="Daftari la Nasaba" />
+          <ProfileMenuRow to="/documents" icon={FileText} label="Nyaraka za Chama" />
           <ProfileMenuRow to="/orders" icon={ClipboardList} label={t("manageOrders")} />
           <ProfileMenuRow to="/messages" icon={MessageCircle} label={t("messenger")} dot={unread > 0} />
           <ProfileMenuRow to="/cart" icon={ShoppingCart} label={t("shoppingCart")} />

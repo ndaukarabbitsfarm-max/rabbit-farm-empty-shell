@@ -5,9 +5,9 @@ import { LANGUAGES, usePrefs } from "@/lib/prefs";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Mipangilio — Ndauka Farm" },
-      { name: "description", content: "Chagua lugha na sarafu unayotumia kwenye soko la Ndauka Farm." },
-      { property: "og:title", content: "Mipangilio — Ndauka Farm" },
+      { title: "Mipangilio — TRBA" },
+      { name: "description", content: "Chagua lugha na sarafu unayotumia kwenye soko la TRBA." },
+      { property: "og:title", content: "Mipangilio — TRBA" },
       { property: "og:description", content: "Lugha na sarafu ya akaunti yako." },
     ],
   }),

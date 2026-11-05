@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/notifications")({
   head: () => ({
     meta: [
-      { title: "Taarifa — Ndauka Farm" },
-      { name: "description", content: "Taarifa za bidhaa mpya na maombi ya chat kwenye Ndauka Farm." },
-      { property: "og:title", content: "Taarifa — Ndauka Farm" },
+      { title: "Taarifa — TRBA" },
+      { name: "description", content: "Taarifa za bidhaa mpya na maombi ya chat kwenye TRBA." },
+      { property: "og:title", content: "Taarifa — TRBA" },
       { property: "og:description", content: "Taarifa za papo hapo za soko." },
     ],
   }),

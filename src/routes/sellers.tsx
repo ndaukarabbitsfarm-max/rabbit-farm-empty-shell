@@ -8,12 +8,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/sellers")({
   head: () => ({
     meta: [
-      { title: "Wafugaji — Ndauka Farm" },
+      { title: "Wafugaji — TRBA" },
       {
         name: "description",
-        content: "Orodha ya wafugaji na wauzaji walioidhinishwa kwenye soko la Ndauka Farm.",
+        content: "Orodha ya wafugaji na wauzaji walioidhinishwa kwenye soko la TRBA.",
       },
-      { property: "og:title", content: "Wafugaji — Ndauka Farm" },
+      { property: "og:title", content: "Wafugaji — TRBA" },
       { property: "og:description", content: "Wafugaji walioidhinishwa na wenye beji ya uaminifu." },
     ],
   }),
@@ -39,7 +39,7 @@ function SellersPage() {
     <MobileShell>
       <div className="brand-surface safe-top px-3 pb-4 pt-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-sm font-extrabold">Ndauka Farm</h1>
+          <h1 className="text-sm font-extrabold">TRBA</h1>
           <NotificationBell onBrand />
         </div>
         <div className="pt-3">

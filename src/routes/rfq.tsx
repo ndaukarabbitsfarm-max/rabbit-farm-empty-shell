@@ -23,13 +23,13 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/rfq")({
   head: () => ({
     meta: [
-      { title: "Omba Nukuu ya Bei (RFQ) — Ndauka Farm" },
+      { title: "Omba Nukuu ya Bei (RFQ) — TRBA" },
       {
         name: "description",
         content:
-          "Omba nukuu ya bei kwa mabanda ya vipimo maalum au mifugo ya jumla kutoka kwa wafugaji wa Ndauka Farm.",
+          "Omba nukuu ya bei kwa mabanda ya vipimo maalum au mifugo ya jumla kutoka kwa wafugaji wa TRBA.",
       },
-      { property: "og:title", content: "Omba Nukuu ya Bei (RFQ) — Ndauka Farm" },
+      { property: "og:title", content: "Omba Nukuu ya Bei (RFQ) — TRBA" },
       { property: "og:description", content: "Fomu ya maombi ya bei maalum kwa oda za jumla." },
     ],
   }),

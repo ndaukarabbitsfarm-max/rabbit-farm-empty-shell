@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
@@ -40,7 +41,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -83,25 +84,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ndauka Rabbits Farm Marketplace" },
+      { title: "Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
-          "Buy and sell breeding rabbits, cages, feeds and farm equipment across Tanzania.",
+          "Jukwaa rasmi la TRBA: uanachama, daftari la nasaba na soko la wafugaji. Connecting breeders, improving breeds, creating opportunities.",
       },
-      { name: "author", content: "Ndauka Rabbits Farm" },
-      { property: "og:title", content: "Ndauka Rabbits Farm Marketplace" },
+      { name: "author", content: "Tanzania Rabbit Breeders Association" },
+      { property: "og:title", content: "Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content:
-          "Buy and sell breeding rabbits, cages, feeds and farm equipment across Tanzania.",
+          "Connecting breeders, improving breeds, creating opportunities.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "theme-color", content: "#008751" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
-      { name: "apple-mobile-web-app-title", content: "Ndauka Rabbit" },
+      { name: "apple-mobile-web-app-title", content: "TRBA" },
       { name: "apple-mobile-web-app-status-bar-style", content: "default" },
     ],
     links: [
@@ -144,8 +145,8 @@ function RootComponent() {
   // Record one app-open per session for the admin analytics panel.
   useEffect(() => {
     try {
-      if (window.sessionStorage.getItem("ndauka-visit-logged")) return;
-      window.sessionStorage.setItem("ndauka-visit-logged", "1");
+      if (window.sessionStorage.getItem("trba-visit-logged")) return;
+      window.sessionStorage.setItem("trba-visit-logged", "1");
     } catch {
       /* storage unavailable */
     }

@@ -9,12 +9,12 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/listing/$id/edit")({
   head: () => ({
     meta: [
-      { title: "Edit Listing — Ndauka Rabbits Farm Marketplace" },
+      { title: "Edit Listing — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content: "Update photos, stock quantity, price in TZS and details of your listing.",
       },
-      { property: "og:title", content: "Edit Listing — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Edit Listing — Tanzania Rabbit Breeders Association (TRBA)" },
       { property: "og:description", content: "Update your listing details, stock and price." },
     ],
   }),

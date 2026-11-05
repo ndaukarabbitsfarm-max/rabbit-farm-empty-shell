@@ -15,12 +15,12 @@ import { notifyUser } from "@/lib/push-client";
 export const Route = createFileRoute("/admin_/kyc")({
   head: () => ({
     meta: [
-      { title: "KYC Review — Ndauka Rabbits Farm Marketplace" },
+      { title: "KYC Review — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content: "Admin review of seller identity documents submitted for verification.",
       },
-      { property: "og:title", content: "KYC Review — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "KYC Review — Tanzania Rabbit Breeders Association (TRBA)" },
       { property: "og:description", content: "Approve or reject seller verification documents." },
     ],
   }),

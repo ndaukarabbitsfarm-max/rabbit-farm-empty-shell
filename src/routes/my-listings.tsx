@@ -16,12 +16,12 @@ import { formatTZS } from "@/lib/marketplace";
 export const Route = createFileRoute("/my-listings")({
   head: () => ({
     meta: [
-      { title: "My Listings — Ndauka Rabbits Farm Marketplace" },
+      { title: "My Listings — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content: "Manage the rabbit, cage, feed and equipment listings you have posted for sale.",
       },
-      { property: "og:title", content: "My Listings — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "My Listings — Tanzania Rabbit Breeders Association (TRBA)" },
       { property: "og:description", content: "Manage the listings you have posted for sale." },
     ],
   }),

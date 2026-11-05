@@ -4,9 +4,9 @@ import { MobileShell } from "@/components/MobileShell";
 export const Route = createFileRoute("/help")({
   head: () => ({
     meta: [
-      { title: "Msaada — Ndauka Farm" },
-      { name: "description", content: "Maswali yanayoulizwa mara kwa mara na njia za kupata msaada Ndauka Farm." },
-      { property: "og:title", content: "Msaada — Ndauka Farm" },
+      { title: "Msaada — TRBA" },
+      { name: "description", content: "Maswali yanayoulizwa mara kwa mara na njia za kupata msaada TRBA." },
+      { property: "og:title", content: "Msaada — TRBA" },
       { property: "og:description", content: "Maswali na msaada kwa wanunuzi na wafugaji." },
     ],
   }),

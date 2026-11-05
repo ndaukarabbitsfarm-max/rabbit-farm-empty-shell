@@ -10,12 +10,12 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Weka nywila mpya — Ndauka Rabbits Farm Marketplace" },
+      { title: "Weka nywila mpya — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
-        content: "Set a new password for your Ndauka Rabbits Farm marketplace account.",
+        content: "Set a new password for your TRBA marketplace account.",
       },
-      { property: "og:title", content: "Weka nywila mpya — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Weka nywila mpya — Tanzania Rabbit Breeders Association (TRBA)" },
       { property: "og:description", content: "Set a new password for your marketplace account." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

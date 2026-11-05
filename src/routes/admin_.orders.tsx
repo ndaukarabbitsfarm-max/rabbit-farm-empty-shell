@@ -21,12 +21,12 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/admin_/orders")({
   head: () => ({
     meta: [
-      { title: "Admin orders — Ndauka Farm" },
+      { title: "Admin orders — TRBA" },
       {
         name: "description",
         content: "Admin dashboard listing every order on the marketplace with buyer, seller and totals.",
       },
-      { property: "og:title", content: "Admin orders — Ndauka Farm" },
+      { property: "og:title", content: "Admin orders — TRBA" },
       { property: "og:description", content: "All marketplace orders with filters and totals." },
     ],
   }),

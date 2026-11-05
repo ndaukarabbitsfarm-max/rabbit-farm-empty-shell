@@ -16,12 +16,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/messages/$id")({
   head: () => ({
     meta: [
-      { title: "Conversation — Ndauka Rabbits Farm Marketplace" },
+      { title: "Conversation — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content: "Chat about breeds, custom cage specifications, pricing and delivery arrangements.",
       },
-      { property: "og:title", content: "Conversation — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Conversation — Tanzania Rabbit Breeders Association (TRBA)" },
       { property: "og:description", content: "Chat about specs, pricing and delivery." },
     ],
   }),

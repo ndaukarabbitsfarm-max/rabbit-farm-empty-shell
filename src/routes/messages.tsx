@@ -24,13 +24,13 @@ function formatWhen(iso: string | null | undefined) {
 export const Route = createFileRoute("/messages")({
   head: () => ({
     meta: [
-      { title: "Messages — Ndauka Rabbits Farm Marketplace" },
+      { title: "Messages — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         name: "description",
         content:
           "Chat directly with buyers and sellers about breeds, custom cage specs and delivery arrangements.",
       },
-      { property: "og:title", content: "Messages — Ndauka Rabbits Farm Marketplace" },
+      { property: "og:title", content: "Messages — Tanzania Rabbit Breeders Association (TRBA)" },
       {
         property: "og:description",
         content: "Your buyer and seller conversations in one inbox.",

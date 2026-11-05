@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/how-to-sell")({
   head: () => ({
     meta: [
-      { title: "Jinsi ya Kuuza — Ndauka Farm" },
+      { title: "Jinsi ya Kuuza — TRBA" },
       {
         name: "description",
-        content: "Hatua za kuwa muuzaji aliyethibitishwa Ndauka Farm: sajili, thibitisha KYC, weka bidhaa.",
+        content: "Hatua za kuwa muuzaji aliyethibitishwa TRBA: sajili, thibitisha KYC, weka bidhaa.",
       },
-      { property: "og:title", content: "Jinsi ya Kuuza — Ndauka Farm" },
+      { property: "og:title", content: "Jinsi ya Kuuza — TRBA" },
       { property: "og:description", content: "Hatua za kuwa muuzaji aliyethibitishwa." },
     ],
   }),

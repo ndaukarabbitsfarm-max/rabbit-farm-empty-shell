@@ -1,34 +1,109 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ShieldAlert, Inbox, Check, X, Eye, Users, Package, BadgeCheck } from "lucide-react";
+import { ShieldAlert, Inbox, Check, X, Eye, Users, Package, BadgeCheck, Megaphone } from "lucide-react";
 import { toast } from "sonner";
 import { MobileShell } from "@/components/MobileShell";
 import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatTZS, categoryName } from "@/lib/marketplace";
+import { memberCode } from "@/lib/trba";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Admin Review — Ndauka Rabbits Farm Marketplace" },
+      { title: "Dashibodi ya Viongozi — TRBA" },
       {
         name: "description",
-        content: "Review and approve seller profiles and submitted marketplace listings.",
+        content: "Simamia wanachama, idhini za usajili, matangazo na orodha za soko la TRBA.",
       },
-      { property: "og:title", content: "Admin Review — Ndauka Rabbits Farm Marketplace" },
-      { property: "og:description", content: "Approve seller profiles and submitted listings." },
+      { property: "og:title", content: "Dashibodi ya Viongozi — TRBA" },
+      { property: "og:description", content: "Usimamizi wa wanachama na matangazo ya TRBA." },
     ],
   }),
   component: AdminPage,
 });
 
 function AdminPage() {
-  const { isAdmin, loading } = useAuth();
+  const { isAdmin, loading, user } = useAuth();
   const qc = useQueryClient();
+  const [annSaving, setAnnSaving] = useState(false);
+
+  const { data: pendingMembers } = useQuery({
+    enabled: isAdmin,
+    queryKey: ["admin-trba-members"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("trba_members")
+        .select("*")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const reviewMember = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: "approved" | "rejected" }) => {
+      const { error } = await supabase
+        .from("trba_members")
+        .update({ status, reviewed_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Uanachama umesasishwa");
+      qc.invalidateQueries({ queryKey: ["admin-trba-members"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const { data: announcements } = useQuery({
+    enabled: isAdmin,
+    queryKey: ["admin-trba-announcements"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("trba_announcements")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  async function publishAnnouncement(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!user) return;
+    const f = new FormData(e.currentTarget);
+    setAnnSaving(true);
+    try {
+      const kind = String(f.get("kind"));
+      const { error } = await supabase.from("trba_announcements").insert({
+        title: String(f.get("title")),
+        body: String(f.get("body")),
+        kind,
+        meeting_at: kind === "meeting" && f.get("meeting_at") ? new Date(String(f.get("meeting_at"))).toISOString() : null,
+        location: String(f.get("location")) || null,
+        created_by: user.id,
+      });
+      if (error) throw error;
+      (e.target as HTMLFormElement).reset();
+      await qc.invalidateQueries({ queryKey: ["admin-trba-announcements"] });
+      toast.success("Tangazo limetangazwa");
+    } catch {
+      toast.error("Tangazo halijahifadhiwa. Jaribu tena.");
+    } finally {
+      setAnnSaving(false);
+    }
+  }
 
   const { data: pendingProducts } = useQuery({
     enabled: isAdmin,

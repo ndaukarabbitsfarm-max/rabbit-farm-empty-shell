@@ -11,6 +11,9 @@ import {
   Boxes,
   Wrench,
   ChevronRight,
+  Megaphone,
+  CreditCard,
+  BookOpen,
 } from "lucide-react";
 import { MobileShell, CartButton, NotificationBell, TopTabs } from "@/components/MobileShell";
 import { AnimatedSearchBar } from "@/components/AnimatedSearchBar";
@@ -22,22 +25,24 @@ import type { CardProduct } from "@/components/CompactProductCard";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CATEGORIES, PUBLIC_PRODUCT_COLUMNS } from "@/lib/marketplace";
+import { TRBA } from "@/lib/trba";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import heroImg from "@/assets/trba-rabbits.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Ndauka Farm — Soko la Jumla la Mifugo, Mabanda na Chakula" },
+      { title: "TRBA — Tanzania Rabbit Breeders Association" },
       {
         name: "description",
         content:
-          "Soko kuu la kidijitali la B2B Tanzania: sungura wa mbegu, kuku, bata, mabanda ya kisasa na chakula cha mifugo kwa bei ya jumla (TZS).",
+          "Jukwaa rasmi la Chama cha Wafugaji Sungura Tanzania: uanachama, daftari la nasaba, nyaraka za chama na soko la wafugaji. Connecting breeders, improving breeds, creating opportunities.",
       },
-      { property: "og:title", content: "Ndauka Farm — Soko la Jumla la Mifugo" },
+      { property: "og:title", content: "TRBA — Tanzania Rabbit Breeders Association" },
       {
         property: "og:description",
-        content: "Nunua na uuze mifugo, mabanda na chakula cha mifugo kwa bei ya jumla.",
+        content: "Connecting breeders, improving breeds, creating opportunities.",
       },
     ],
   }),
@@ -132,7 +137,7 @@ function HomePage() {
       <div className="brand-surface safe-top px-3 pb-5 pt-3">
         <div className="flex items-center justify-between gap-3">
           <span className="flex items-center gap-1.5 text-sm font-extrabold tracking-tight">
-            <Rabbit className="h-5 w-5" /> Ndauka Farm
+            <Rabbit className="h-5 w-5" /> TRBA
           </span>
           <div className="flex items-center gap-2">
             <NotificationBell onBrand />
